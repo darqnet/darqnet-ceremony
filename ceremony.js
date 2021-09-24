@@ -25,7 +25,7 @@ async function all () {
   const b = 'What is your intention to bring forth into darqnet?\n'
   let B = []
 
-  const numQnetians = 2
+  const numQnetians = 4
   //const numQnetians = 1
   for (let i = 0; i < numQnetians; i++) {
     console.log('\033[2J');
