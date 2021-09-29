@@ -25,7 +25,7 @@ async function all () {
   const b = 'What is your intention to bring forth into darqnet?\n'
   let B = []
 
-  const numQnetians = 4
+  const numQnetians = 7
   //const numQnetians = 1
   for (let i = 0; i < numQnetians; i++) {
     console.log('\033[2J');
@@ -35,19 +35,21 @@ async function all () {
   }
 
   console.log('\033[2J');
+  console.log('Encrypting intentions...')
 
   const ceramic = new CeramicClient(API_URL)
   ceramic.did = did
   const doc = await TileDocument.create(ceramic, null, { deterministic: true }, { anchor: false, publish: false })
 
-  await doc.update({
+  const jwe = await did.createDagJWE({
     a, b, c,
     A, B, C
-  })
+  }, [did.id])
+  await doc.update(jwe)
 
   writeStreamId(doc.id.toString())
 
-  const shards = await seedsplit.split(mnemonic, 4, 3)
+  const shards = await seedsplit.split(mnemonic, 7, 5)
 
   for (const shard of shards) {
     await prompt('\n ~~~ Press enter when you are ready to copy the seed ~~~')
