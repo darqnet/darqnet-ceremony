@@ -40,6 +40,7 @@ async function all () {
   const ceramic = new CeramicClient(API_URL)
   ceramic.did = did
   const doc = await TileDocument.create(ceramic, null, { deterministic: true }, { anchor: false, publish: false })
+  await ceramic.pin.add(doc.id)
 
   const jwe = await did.createDagJWE({
     a, b, c,
