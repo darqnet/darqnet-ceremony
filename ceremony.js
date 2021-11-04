@@ -10,6 +10,9 @@ const bip39 = require('bip39')
 
 const API_URL = 'https://ceramic-private.3boxlabs.com'
 
+const PARTICIPANTS = 4
+const THREASHOLD = 3 //Math.floor(PARTICIPANTS / 2) + 1
+
 async function all () {
   const mnemonic = bip39.generateMnemonic()
   const seed = new Uint8Array(bip39.mnemonicToSeedSync(mnemonic).slice(0, 32))
@@ -18,17 +21,16 @@ async function all () {
   await did.authenticate()
 
 
-  const c = 'Feel into what the darqnet is and condense it into a sentence.\n'
+  const c = 'Feel into the present moment is and condense it into a sentence.\n'
   let C = []
-  const a = 'Express your intuition about the future of darqnet?\n'
+  const a = 'What is your biggest embarrassment in crypto?\n'
   let A = []
-  const b = 'What is your intention to bring forth into darqnet?\n'
+  const b = 'What is the future of the "metaverse"?\n'
   let B = []
 
-  const numQnetians = 7
-  //const numQnetians = 1
-  for (let i = 0; i < numQnetians; i++) {
+  for (let i = 0; i < PARTICIPANTS; i++) {
     console.log('\033[2J');
+    console.log('Welcome to Darqnet...\n')
     C.push(await prompt(c))
     A.push(await prompt(a))
     B.push(await prompt(b))
@@ -50,13 +52,13 @@ async function all () {
 
   writeStreamId(doc.id.toString())
 
-  const shards = await seedsplit.split(mnemonic, 7, 5)
+  const shards = await seedsplit.split(mnemonic, PARTICIPANTS, THREASHOLD)
 
   for (const shard of shards) {
-    await prompt('\n ~~~ Press enter when you are ready to copy the seed ~~~')
+    await prompt('\n ~~~ Press enter when you are ready to copy your seed ~~~')
     console.log('\033[2J');
     console.log(shard)
-    await prompt('\n ~~~ Press enter when you are done copying the seed ~~~')
+    await prompt('\n ~~~ Press enter when you are done copying your seed ~~~')
     console.log('\033[2J');
   }
   console.log('\033[2J')
@@ -79,7 +81,7 @@ function prompt(question) {
 
 function writeStreamId (address) {
   var fs = require('fs');
-  fs.writeFile('darqnet-root', address, function(err) {
+  fs.writeFile('sermons/2021-10-30.darqnet', address, function(err) {
     if(err) {
       return console.log(err);
     }
