@@ -21,11 +21,11 @@ async function all () {
   await did.authenticate()
 
 
-  const c = 'Feel into the present moment is and condense it into a sentence.\n'
+  const c = 'Feel into the darkness of the solstice and condense it into a sentence.\n'
   let C = []
-  const a = 'What is your biggest embarrassment in crypto?\n'
+  const a = 'What is your biggest dream for the new year?\n'
   let A = []
-  const b = 'What is the future of the "metaverse"?\n'
+  const b = 'What will happen on the summer solstice?\n'
   let B = []
 
   for (let i = 0; i < PARTICIPANTS; i++) {
@@ -81,7 +81,7 @@ function prompt(question) {
 
 function writeStreamId (address) {
   var fs = require('fs');
-  fs.writeFile('sermons/2021-10-30.darqnet', address, function(err) {
+  fs.writeFile('sermons/2021-12-21.darqnet', address, function(err) {
     if(err) {
       return console.log(err);
     }
