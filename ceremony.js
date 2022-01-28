@@ -20,14 +20,14 @@ async function openCircle () {
   if (isNaN(participants)) return
   const threshold = parseInt(await prompt('How large shall your threshold be?\n'))
   if (isNaN(threshold)) return
-  const shards = await seedsplit.split(mnemonic, participants, THRESHOLD)
+  const shards = await seedsplit.split(mnemonic, participants, threshold)
 
 
   const c = 'Feel into the uniqueness of our team and condense it into a sentence.\n'
   let C = []
-  const a = 'What about yourself do you want to change durind this cycle?\n'
+  const a = 'What about yourself do you want to change durind this ceremonial cycle?\n'
   let A = []
-  const b = 'What big event will drive Ceramic adoption this cycle?\n'
+  const b = 'What big event will drive Ceramic adoption this ceremonial cycle?\n'
   let B = []
 
   for (let i = 0; i < participants; i++) {
