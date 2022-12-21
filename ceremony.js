@@ -75,10 +75,13 @@ async function closeCircle () {
   await did.authenticate()
   console.log('did', did.id)
 
-  const jwe = JSON.parse(await prompt('Enter JWE:\n'))
-  // TODO - get JWE from Ceramic
-  //const doc = await TileDocument.create(ceramic, null, { deterministic: true }, { anchor: false, publish: false })
-  //const jwe = doc.content
+  const ceramic = new CeramicClient(API_URL)
+  ceramic.did = did
+  // const streamid = await prompt('Enter streamid:\n')
+  // const doc = await TileDocument.load(ceramic, streamid)
+  const doc = await TileDocument.create(ceramic, null, { deterministic: true }, { anchor: false, publish: false })
+  console.log(doc.content)
+  const jwe = doc.content
 
   const cleartext = await did.decryptDagJWE(jwe)
   console.log('\033[2J');
