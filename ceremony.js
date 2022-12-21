@@ -23,11 +23,11 @@ async function openCircle () {
   const shards = await seedsplit.split(mnemonic, participants, threshold)
 
 
-  const c = 'Feel into the uniqueness of our team and condense it into a sentence.\n'
+  const c = '> What is your biggest dream for the new year?\n'
   let C = []
-  const a = 'What about yourself do you want to change durind this ceremonial cycle?\n'
+  const a = '> What will you conjure by the summer solstice?\n'
   let A = []
-  const b = 'What big event will drive Ceramic adoption this ceremonial cycle?\n'
+  const b = '> Feel into the this moment and caputre its essence!\n'
   let B = []
 
   for (let i = 0; i < participants; i++) {
