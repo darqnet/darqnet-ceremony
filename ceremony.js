@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const { DID } = require('dids')
-const { CeramicClient } = require('@ceramicnetwork/http-client')
-const { TileDocument } = require('@ceramicnetwork/stream-tile')
-const { Ed25519Provider } = require('key-did-provider-ed25519')
-const KeyResolver = require('key-did-resolver')
-const seedsplit = require('seedsplit')
-const bip39 = require('bip39')
+import { DID } from 'dids'
+import { CeramicClient} from '@ceramicnetwork/http-client'
+import { TileDocument} from "@ceramicnetwork/stream-tile";
+import { Ed25519Provider } from "key-did-provider-ed25519";
+import KeyResolver from 'key-did-resolver'
+import * as seedsplit from './seedsplit.js'
+import bip39 from 'bip39'
 
 const API_URL = 'https://ceramic-private.3boxlabs.com'
 
@@ -31,7 +31,7 @@ async function openCircle () {
   let B = []
 
   for (let i = 0; i < participants; i++) {
-    console.log('\033[2J');
+    console.clear()
     console.log('Welcome to Darqnet...\n')
     C.push(await prompt(c))
     A.push(await prompt(a))
@@ -39,10 +39,10 @@ async function openCircle () {
     await prompt('\n ~~~ Press enter when you are ready to copy your seed ~~~')
     console.log(shards[i])
     await prompt('\n ~~~ Press enter when you are done copying your seed ~~~')
-    console.log('\033[2J');
+    console.clear()
   }
 
-  console.log('\033[2J');
+  console.clear()
   console.log('Encrypting intentions...')
 
   const ceramic = new CeramicClient(API_URL)
@@ -65,7 +65,7 @@ async function closeCircle () {
   const threshold = parseInt(await prompt('What was the threshold of your opening ceremony?\n'))
   if (isNaN(threshold)) return
   for (let i = 0; i < threshold; i++) {
-    console.log('\033[2J');
+    console.clear()
     shards.push(await prompt(`Enter your shard (${i}):\n`))
   }
   const mnemonic = await seedsplit.combine(shards)
@@ -84,7 +84,7 @@ async function closeCircle () {
   const jwe = doc.content
 
   const cleartext = await did.decryptDagJWE(jwe)
-  console.log('\033[2J');
+  console.clear()
   console.log(cleartext.a)
   printAnswers(cleartext.A)
   console.log(cleartext.b)
@@ -100,7 +100,7 @@ function printAnswers (answers) {
 }
 
 async function startCeremony () {
-  console.log('\033[2J');
+  console.clear()
   console.log('Welcome to Darqnet...\n')
   const ceremonyType = await prompt('Is this an [o]pening or [c]losing ceremony?\n')
   if (ceremonyType === 'o') {
@@ -121,8 +121,19 @@ function prompt(question) {
     stdin.resume()
     stdout.write('\n' + question)
 
-    stdin.on('data', data => resolve(data.toString().trim()))
-    stdin.on('error', err => reject(err))
+    const stdinHandler = (data) => {
+      stdin.off('data', stdinHandler)
+      stdin.off('error', errorHandler)
+      resolve(data.toString().trim());
+    }
+    const errorHandler = err => {
+      stdin.off('data', stdinHandler)
+      stdin.off('error', errorHandler)
+      reject(err)
+    }
+
+    stdin.on('data', stdinHandler)
+    stdin.on('error',errorHandler)
   })
 }
 
