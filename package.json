@@ -11,13 +11,17 @@
     "dids": "^2.4.0",
     "key-did-provider-ed25519": "^1.1.0",
     "key-did-resolver": "^1.4.0",
+    "parcel": "^2.8.3",
     "sss-wasm": "^0.4.0"
   },
   "devDependencies": {
-    "prettier": "^2.8.3"
+    "@parcel/transformer-sass": "^2.8.3",
+    "prettier": "^2.8.3",
+    "sass": "^1.58.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "parcel src/*.html --dist-dir build",
+    "build": "parcel build src/*.html --dist-dir build"
   },
   "author": "",
   "license": "ISC"

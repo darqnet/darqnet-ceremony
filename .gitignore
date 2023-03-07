@@ -1,2 +1,5 @@
 node_modules
 orbitdb
+.parcel-cache
+.DS_Store
+build/
