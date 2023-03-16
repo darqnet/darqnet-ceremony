@@ -1,0 +1,137 @@
+@import url("https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap");
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+// ripple and candle flame color
+$purple: #1942f9;
+
+// || ANIMATIONS
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba($purple, 0.08), 0 0 0 40px rgba($purple, 0.08),
+      0 0 0 60px rgba($purple, 0.08), 0 0 0 80px rgba($purple, 0.08);
+  }
+  100% {
+    box-shadow: 0 0 0 40px rgba($purple, 0.08), 0 0 0 60px rgba($purple, 0.08),
+      0 0 0 80px rgba($purple, 0.08), 0 0 0 100px rgba($purple, 0);
+  }
+}
+
+@keyframes fadeIn-Out {
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+// GLOBAL STYLES
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+body {
+  font-family: "Didact Gothic", sans-serif;
+  color: #fff;
+  min-height: 100vh;
+  background-color: #0c0c0c;
+  display: grid;
+  place-items: center;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+button {
+  outline-color: transparent;
+}
+
+.ripple {
+  min-height: 700px;
+  width: 100%;
+  border-radius: 50%;
+  animation: ripple 1.5s linear infinite;
+  filter: blur(4px);
+  // background-color: transparent;
+  // border: solid 1px #ffffff5f;
+  position: absolute;
+  z-index: -1;
+}
+
+.ceremonyContainer {
+  // border: solid 1px lightblue;
+  min-height: 700px;
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  display: grid;
+  place-items: center;
+}
+
+.welcome {
+  opacity: 0;
+  font-size: 2.5rem;
+  animation: fadeIn-Out 5s 1s ease-in forwards;
+}
+
+// COMPONENT STYLES
+
+// || chooseCeremony
+
+@keyframes fadeIn {
+  100% {
+    opacity: 1;
+  }
+}
+
+.chooseCeremony__container {
+  // border: solid 1px #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.button__container {
+  display: flex;
+  // border: solid 1px #fff;
+  gap: 1.6em;
+}
+
+.cerBtn {
+  font-size: 1rem;
+  padding: 1em;
+  border-radius: 30px;
+  border: solid 2px #fff;
+  background-color: transparent;
+  color: #fff;
+  transition: 0.2s all;
+}
+
+.cerBtn:hover,
+.cerBtn:focus {
+  background-color: #1a1a1a;
+  cursor: pointer;
+}
+
+.cerBtn + .cerBtn {
+  margin-right: 1em;
+}
