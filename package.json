@@ -16,8 +16,13 @@
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.8.3",
+    "crypto-browserify": "^3.12.0",
+    "events": "^3.3.0",
+    "path-browserify": "^1.0.1",
     "prettier": "^2.8.3",
-    "sass": "^1.58.3"
+    "process": "^0.11.10",
+    "sass": "^1.58.3",
+    "stream-browserify": "^3.0.0"
   },
   "scripts": {
     "dev": "parcel src/*.html --dist-dir build",
