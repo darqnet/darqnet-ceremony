@@ -1,11 +1,12 @@
 "use strict";
 
+// DOM
+export const welcome = document.querySelector(".welcome");
+
 // COMPONENTS
 
-const welcome = document.querySelector(".welcome");
-
 // || CHOOSE CEREMONY ||
-class chooseCeremony extends HTMLElement {
+export class chooseCeremony extends HTMLElement {
   constructor() {
     super();
     const chooseCeremony__temp = document.createElement("template");
@@ -62,13 +63,14 @@ class chooseCeremony extends HTMLElement {
     `;
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(chooseCeremony__temp.content.cloneNode(true));
+    let ceremonyOption;
+    const open = shadow.querySelector(".open");
+    const close = shadow.querySelector(".close");
+    open.addEventListener("click", () => (ceremonyOption = "open"));
+    close.addEventListener("click", () => (ceremonyOption = "closed"));
   }
 }
 
-customElements.define("choose-ceremony", chooseCeremony);
-
-const loadComponents = () => {
-  setTimeout(() => welcome.replaceWith(new chooseCeremony()), 6000);
-};
-
-loadComponents();
+export function declareComponents() {
+  customElements.define("choose-ceremony", chooseCeremony);
+}
