@@ -1,3 +1,5 @@
+"use strict";
+
 import { DID } from "dids";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
@@ -5,47 +7,43 @@ import { Ed25519Provider } from "key-did-provider-ed25519";
 import KeyResolver from "key-did-resolver";
 import * as seedsplit from "./seedsplit.js";
 import bip39 from "bip39";
-import * as CP from "./components.js";
+import CP from "./components.js";
 
 const API_URL = "https://ceramic-private.3boxlabs.com";
 
 // Register Components
 CP.declareComponents();
-
-// const loadComponents = async () => {
-//   const initiate = await setTimeout(() => {
-//     welcome.replaceWith(new CP.chooseCeremony());
-//     return true;
-//   }, 6000);
-//   if (initiate) return true;
-// };
+const choose_cer__cmpt = new CP.chooseCeremony();
 
 const loadWelcome = new Promise((resolve, reject) => {
   setTimeout(() => {
-    CP.welcome.replaceWith(new CP.chooseCeremony());
-    resolve(true);
+    try {
+      CP.welcome.replaceWith(choose_cer__cmpt);
+      resolve(true);
+    } catch (err) {
+      reject(err);
+    }
   }, 6000);
 });
 
 async function startCeremony() {
-  let choose_cer_component;
+  let choose_cer__html;
   const loaded = await loadWelcome;
   if (loaded) {
-    console.log("loaded!");
-    choose_cer_component = document.querySelector("choose-ceremony");
-    console.log(choose_cer_component);
+    choose_cer__html = document.querySelector("choose-ceremony");
   }
-
-  //   const ceremonyType = await prompt(
-  //     "Is this an [o]pening or [c]losing ceremony?\n"
-  //   );
-  //   if (ceremonyType === "o") {
-  //     await openCircle();
-  //   } else if (ceremonyType === "c") {
-  //     await closeCircle();
-  //   }
+  console.log("selection:", choose_cer__cmpt.selection);
+  const ceremonyType = await choose_cer__cmpt.selection;
+  if (ceremonyType === "open") {
+    console.log("open.");
+    // await openCircle();
+  } else if (ceremonyType === "close") {
+    console.log("closing.");
+    // await closeCircle();
+  }
   //   console.log("Ceremonial sequence end");
 }
+
 startCeremony();
 // async function openCircle() {
 //   const mnemonic = bip39.generateMnemonic();
@@ -155,22 +153,6 @@ startCeremony();
 //     console.log(`\n${answer}\n`);
 //   }
 // }
-
-// async function startCeremony() {
-//   console.clear();
-//   console.log("Welcome to Darqnet...\n");
-//   const ceremonyType = await prompt(
-//     "Is this an [o]pening or [c]losing ceremony?\n"
-//   );
-//   if (ceremonyType === "o") {
-//     await openCircle();
-//   } else if (ceremonyType === "c") {
-//     await closeCircle();
-//   }
-//   console.log("Ceremonial sequence end");
-// }
-
-// startCeremony();
 
 // function prompt(question) {
 //   return new Promise((resolve, reject) => {
