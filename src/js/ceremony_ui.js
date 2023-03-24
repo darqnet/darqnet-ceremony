@@ -14,6 +14,7 @@ const API_URL = "https://ceramic-private.3boxlabs.com";
 // Register Components
 CP.declareComponents();
 const choose_cer__cmpt = new CP.chooseCeremony();
+const get_participants__cmpt = new CP.getParticipants();
 
 const loadWelcome = new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -36,12 +37,24 @@ async function startCeremony() {
   const ceremonyType = await choose_cer__cmpt.selection;
   if (ceremonyType === "open") {
     console.log("open.");
+    replaceComponent(choose_cer__html, get_participants__cmpt);
+    setTimeout(() => {
+      get_participants__cmpt.setPlaceholder("How many have gathered? ");
+    }, 1000);
     // await openCircle();
   } else if (ceremonyType === "close") {
     console.log("closing.");
     // await closeCircle();
   }
   //   console.log("Ceremonial sequence end");
+}
+
+function replaceComponent(current, replacement) {
+  current.style.opacity = 0;
+  current.style.transitionDuration = "1s";
+  setTimeout(() => {
+    current.replaceWith(replacement);
+  }, 1000);
 }
 
 startCeremony();
