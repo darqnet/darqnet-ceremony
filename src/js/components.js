@@ -85,7 +85,7 @@ class chooseCeremony extends HTMLElement {
   }
 }
 
-// || PARTICIPANTS ||
+// || PARTICIPANT INPUT ||
 class getParticipants extends HTMLElement {
   constructor() {
     super();
@@ -140,7 +140,7 @@ class getParticipants extends HTMLElement {
         display: flex;
         justify-content: space-evenly;
         width: 100%;
-        max-width: 500px;
+        max-width: 600px;
         margin: 0 auto;
       }
     </style>
@@ -154,6 +154,9 @@ class getParticipants extends HTMLElement {
     shadow.append(getParticipants__temp.content.cloneNode(true));
 
     const input = shadow.querySelector(".input");
+    const submitBTN = shadow.querySelector(".submit");
+    this.acquired_participants = false;
+
     this.setPlaceholder = function (text) {
       let count = 1;
       const loadText = setInterval(() => {
@@ -167,12 +170,38 @@ class getParticipants extends HTMLElement {
         }
       }, 40);
     };
+
+    this.input_num = 0;
+
+    this.get_ppl = function () {
+      this.acquired_participants = true;
+      this.input_num = input.value;
+      return input.value;
+    };
+
+    this.participantCount = new Promise((resolve, reject) => {
+      submitBTN.addEventListener("click", () => {
+        resolve(this.get_ppl());
+      });
+    }).then(() => {
+      if (this.acquired_participants) {
+        input.setAttribute("placeholder", "");
+        input.value = "";
+        this.setPlaceholder("What is your threshold? ");
+
+        this.thresholdSize = new Promise((resolve, reject) => {
+          submitBTN.addEventListener("click", () => {
+            resolve(input.value);
+          });
+        });
+      }
+    });
   }
 }
 
 function declareComponents() {
   customElements.define("choose-ceremony", chooseCeremony);
-  customElements.define("get-participants", getParticipants);
+  customElements.define("participant-input", getParticipants);
 }
 
 export default {

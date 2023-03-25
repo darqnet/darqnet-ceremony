@@ -16,6 +16,10 @@ CP.declareComponents();
 const choose_cer__cmpt = new CP.chooseCeremony();
 const get_participants__cmpt = new CP.getParticipants();
 
+// Global Vars
+let participants;
+let threshold;
+
 const loadWelcome = new Promise((resolve, reject) => {
   setTimeout(() => {
     try {
@@ -33,15 +37,15 @@ async function startCeremony() {
   if (loaded) {
     choose_cer__html = document.querySelector("choose-ceremony");
   }
-  console.log("selection:", choose_cer__cmpt.selection);
   const ceremonyType = await choose_cer__cmpt.selection;
+  console.log("selection:", choose_cer__cmpt.selection);
   if (ceremonyType === "open") {
     console.log("open.");
     replaceComponent(choose_cer__html, get_participants__cmpt);
     setTimeout(() => {
       get_participants__cmpt.setPlaceholder("How many have gathered? ");
     }, 1000);
-    // await openCircle();
+    await openCircle();
   } else if (ceremonyType === "close") {
     console.log("closing.");
     // await closeCircle();
@@ -58,6 +62,18 @@ function replaceComponent(current, replacement) {
 }
 
 startCeremony();
+
+async function openCircle() {
+  await get_participants__cmpt.participantCount;
+  participants = parseInt(get_participants__cmpt.input_num);
+  console.log("participants:", participants);
+  threshold = parseInt(await get_participants__cmpt.thresholdSize);
+  console.log("threshold:", threshold);
+  replaceComponent(
+    get_participants__cmpt,
+    (document.createElement("h1").innerHTML = "next!")
+  );
+}
 // async function openCircle() {
 //   const mnemonic = bip39.generateMnemonic();
 //   const seed = new Uint8Array(bip39.mnemonicToSeedSync(mnemonic).slice(0, 32));
