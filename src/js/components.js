@@ -291,6 +291,7 @@ class getConjurations extends HTMLElement {
 
     this.acquiredDreams = false;
     this.acquiredConjurations = false;
+    this.acquiredEssence = false;
 
     this.input_dream = [];
     this.input_conjuration = [];
@@ -300,55 +301,31 @@ class getConjurations extends HTMLElement {
       if (!this.acquiredDreams) {
         this.input_dream.push(input.value);
         this.acquiredDreams = true;
-        console.log("dreams:", this.input_dream);
+        // console.log("dreams:", this.input_dream);
+        input.setAttribute("placeholder", "");
+        input.value = "";
+        this.setPlaceholder(" What will you conjure by the summer solstice?");
       } else if (!this.acquiredConjurations) {
         this.input_conjuration.push(input.value);
         this.acquiredConjurations = true;
-        console.log("conjurations:", this.input_conjuration);
+        // console.log("conjurations:", this.input_conjuration);
+        input.setAttribute("placeholder", "");
+        input.value = "";
+        this.setPlaceholder(" Feel into the moment and capture its essence!");
       } else if (this.acquiredDreams && this.acquiredConjurations) {
-        console.log("moment's essence", this.input_essence);
+        this.input_essence.push(input.value);
+        // console.log("moment's essence", this.input_essence);
+        this.acquiredEssence = true;
       }
-      return input.value;
+      return true;
     };
 
-    // this.push_conjurations = function () {
-    //   this.input_conjuration.push(input.value);
-    //   console.log("conjurations:", input.conjuration);
-    //   return input.value;
-    // };
-
-    // this.capture_essence = function () {
-    //   return input.value;
-    // };
-
-    this.acquire_dreams = new Promise((resolve, reject) => {
+    this.acquire_entries = new Promise((resolve, reject) => {
       submitBTN.addEventListener("click", () => {
-        resolve(this.push_inputs());
-      });
-    }).then(() => {
-      input.setAttribute("placeholder", "");
-      input.value = "";
-      this.setPlaceholder(" What will you conjure by the summer solstice?");
-
-      this.acquire_conjurations = new Promise((resolve, reject) => {
-        submitBTN.addEventListener("click", () => {
-          resolve(this.push_inputs());
-        });
+        this.push_inputs();
+        if (this.acquiredEssence) resolve(true);
       });
     });
-    // .then(() => {
-    //   input.setAttribute("placeholder", "");
-    //   input.value = "";
-    //   this.setPlaceholder(" Feel into the moment and capture its essence!");
-
-    //   this.acquire_essence = new Promise((resolve, reject) => {
-    //     submitBTN.addEventListener("click", () => {
-    //       resolve(this.capture_essence());
-    //     });
-    //   });
-    // });
-
-    this.setPlaceholder(" What is your biggest dream for the new year?");
   }
 }
 
@@ -358,7 +335,8 @@ function declareComponents() {
   customElements.define("conjuration-input", getConjurations);
 }
 
-declareComponents();
+// this is only for testing, remove once component is implemented into ceremony_ui.js
+// declareComponents();
 
 export default {
   welcome,

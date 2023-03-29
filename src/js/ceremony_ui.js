@@ -15,11 +15,16 @@ const API_URL = "https://ceramic-private.3boxlabs.com";
 CP.declareComponents();
 const choose_cer__cmpt = new CP.chooseCeremony();
 const get_participants__cmpt = new CP.getParticipants();
+const getConjurations__cmpt = new CP.getConjurations();
 
 // Global Vars
 let participants;
 let threshold;
+const dreams = [];
+const conjurations = [];
+const essence = [];
 
+// Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve, reject) => {
   setTimeout(() => {
     try {
@@ -31,12 +36,22 @@ const loadWelcome = new Promise((resolve, reject) => {
   }, 6000);
 });
 
+// Smoothly transitions between components
+function replaceComponent(current, replacement) {
+  current.style.opacity = 0;
+  current.style.transitionDuration = "1s";
+  setTimeout(() => {
+    current.replaceWith(replacement);
+  }, 1000);
+}
+
 async function startCeremony() {
   let choose_cer__html;
   const loaded = await loadWelcome;
   if (loaded) {
     choose_cer__html = document.querySelector("choose-ceremony");
   }
+
   const ceremonyType = await choose_cer__cmpt.selection;
   console.log("selection:", choose_cer__cmpt.selection);
   if (ceremonyType === "open") {
@@ -53,14 +68,6 @@ async function startCeremony() {
   //   console.log("Ceremonial sequence end");
 }
 
-function replaceComponent(current, replacement) {
-  current.style.opacity = 0;
-  current.style.transitionDuration = "1s";
-  setTimeout(() => {
-    current.replaceWith(replacement);
-  }, 1000);
-}
-
 startCeremony();
 
 async function openCircle() {
@@ -69,10 +76,21 @@ async function openCircle() {
   console.log("participants:", participants);
   threshold = parseInt(await get_participants__cmpt.thresholdSize);
   console.log("threshold:", threshold);
-  replaceComponent(
-    get_participants__cmpt,
-    (document.createElement("h1").innerHTML = "next!")
-  );
+
+  const get_participants__html = document.querySelector("participant-input");
+  replaceComponent(get_participants__html, getConjurations__cmpt);
+  setTimeout(() => {
+    getConjurations__cmpt.setPlaceholder(
+      " What is your biggest dream for the new year?"
+    );
+  }, 1000);
+  await getConjurations__cmpt.acquire_entries;
+  getConjurations__cmpt.input_dream.forEach((i) => dreams.push(i));
+  getConjurations__cmpt.input_conjuration.forEach((i) => conjurations.push(i));
+  getConjurations__cmpt.input_essence.forEach((i) => essence.push(i));
+  console.log("dreams (UI):", dreams);
+  console.log("conjurations (UI):", conjurations);
+  console.log("essence (UI):", essence);
 }
 // async function openCircle() {
 //   const mnemonic = bip39.generateMnemonic();
