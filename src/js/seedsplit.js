@@ -1,4 +1,4 @@
-import bip39 from "bip39";
+const bip39 = require("bip39");
 import * as ssss from "sss-wasm";
 import * as uint8arrays from "uint8arrays";
 

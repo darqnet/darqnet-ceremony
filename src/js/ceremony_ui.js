@@ -6,7 +6,7 @@ import { TileDocument } from "@ceramicnetwork/stream-tile";
 import { Ed25519Provider } from "key-did-provider-ed25519";
 import KeyResolver from "key-did-resolver";
 import * as seedsplit from "./seedsplit.js";
-import bip39 from "bip39";
+const bip39 = require("bip39");
 import CP from "./components.js";
 
 const API_URL = "https://ceramic-private.3boxlabs.com";
@@ -15,9 +15,10 @@ const API_URL = "https://ceramic-private.3boxlabs.com";
 CP.declareComponents();
 const choose_cer__cmpt = new CP.chooseCeremony();
 const get_participants__cmpt = new CP.getParticipants();
-const getConjurations__cmpt = new CP.getConjurations();
 
 // Global Vars
+const ceremonyContainer = document.querySelector(".ceremonyContainer");
+const componentToReplace = ceremonyContainer.childNodes[1];
 let participants;
 let threshold;
 const dreams = [];
@@ -71,26 +72,35 @@ async function startCeremony() {
 startCeremony();
 
 async function openCircle() {
+  const mnemonic = bip39.generateMnemonic();
+  const seed = new Uint8Array(bip39.mnemonicToSeedSync(mnemonic).slice(0, 32));
+  const provider = new Ed25519Provider(seed);
+  const did = new DID({ provider, resolver: KeyResolver.getResolver() });
+  await did.authenticate();
+
   await get_participants__cmpt.participantCount;
   participants = parseInt(get_participants__cmpt.input_num);
   console.log("participants:", participants);
   threshold = parseInt(await get_participants__cmpt.thresholdSize);
   console.log("threshold:", threshold);
+  const shards = await seedsplit.split(mnemonic, participants, threshold);
 
-  const get_participants__html = document.querySelector("participant-input");
-  replaceComponent(get_participants__html, getConjurations__cmpt);
-  setTimeout(() => {
-    getConjurations__cmpt.setPlaceholder(
-      " What is your biggest dream for the new year?"
-    );
-  }, 1000);
-  await getConjurations__cmpt.acquire_entries;
-  getConjurations__cmpt.input_dream.forEach((i) => dreams.push(i));
-  getConjurations__cmpt.input_conjuration.forEach((i) => conjurations.push(i));
-  getConjurations__cmpt.input_essence.forEach((i) => essence.push(i));
-  console.log("dreams (UI):", dreams);
-  console.log("conjurations (UI):", conjurations);
-  console.log("essence (UI):", essence);
+  for (let i = 0; i < participants; i++) {
+    const userInput = new CP.getConjurations();
+    replaceComponent(ceremonyContainer.childNodes[1], userInput);
+
+    setTimeout(() => {
+      userInput.setPlaceholder(" What is your biggest dream for the new year?");
+    }, 1000);
+    await userInput.acquire_entries;
+    userInput.input_dream.forEach((i) => dreams.push(i));
+    userInput.input_conjuration.forEach((i) => conjurations.push(i));
+    userInput.input_essence.forEach((i) => essence.push(i));
+    console.log("dreams (UI):", dreams);
+    console.log("conjurations (UI):", conjurations);
+    console.log("essence (UI):", essence);
+    console.log(`Person ${i + 1}:\n${shards[i]}`);
+  }
 }
 // async function openCircle() {
 //   const mnemonic = bip39.generateMnemonic();
