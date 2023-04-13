@@ -37,6 +37,19 @@ $purple: #1942f9;
   }
 }
 
+@keyframes heptagram {
+  50% {
+    background-image: url("../../assets/heptagram-grey.png");
+    background-repeat: no-repeat;
+    background-size: 670px;
+    background-position-x: center;
+    background-position-y: 7px;
+  }
+  100% {
+    background-image: none;
+  }
+}
+
 // GLOBAL STYLES
 
 img {
@@ -66,6 +79,7 @@ button {
   width: 100%;
   border-radius: 50%;
   animation: ripple 1.5s linear infinite;
+  // animation: heptagram 6s ease-in;
   filter: blur(4px);
   // background-color: transparent;
   // border: solid 1px #ffffff5f;
@@ -138,4 +152,8 @@ button {
 
 conjuration-input {
   width: 100%;
+}
+
+participant-input {
+  width: 65%;
 }
