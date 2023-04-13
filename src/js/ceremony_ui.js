@@ -18,12 +18,14 @@ const get_participants__cmpt = new CP.getParticipants();
 
 // Global Vars
 const ceremonyContainer = document.querySelector(".ceremonyContainer");
-const componentToReplace = ceremonyContainer.childNodes[1];
 let participants;
 let threshold;
 const dreams = [];
 const conjurations = [];
 const essence = [];
+const dreamPrompt = "What is your biggest dream for the new year?";
+const conjurationPrompt = "What will you conjure by the summer solstice?";
+const essencePrompt = "Feel into the moment and capture its essence!";
 
 // Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve, reject) => {
@@ -66,7 +68,7 @@ async function startCeremony() {
     console.log("closing.");
     // await closeCircle();
   }
-  //   console.log("Ceremonial sequence end");
+  // console.log("Ceremonial sequence end");
 }
 
 startCeremony();
@@ -100,7 +102,36 @@ async function openCircle() {
     console.log("conjurations (UI):", conjurations);
     console.log("essence (UI):", essence);
     console.log(`Person ${i + 1}:\n${shards[i]}`);
+    const seedphraseDisplay = new CP.seedphraseDisplay(shards[i]);
+    replaceComponent(ceremonyContainer.childNodes[1], seedphraseDisplay);
+    await seedphraseDisplay.acceptPhrase;
   }
+
+  replaceComponent(ceremonyContainer.childNodes[1], new CP.encryptionMessage());
+
+  // const ceramic = new CeramicClient(API_URL);
+  // ceramic.did = did;
+  // const doc = await TileDocument.create(
+  //   ceramic,
+  //   null,
+  //   { deterministic: true },
+  //   { anchor: false, publish: false }
+  // );
+  // await ceramic.pin.add(doc.id);
+
+  // const jwe = await did.createDagJWE(
+  //   {
+  //     conjurationPrompt,
+  //     essencePrompt,
+  //     dreamPrompt,
+  //     conjurations,
+  //     essence,
+  //     dreams,
+  //   },
+  //   [did.id]
+  // );
+  // console.log(JSON.stringify(jwe));
+  // await doc.update(jwe);
 }
 // async function openCircle() {
 //   const mnemonic = bip39.generateMnemonic();

@@ -329,10 +329,146 @@ class getConjurations extends HTMLElement {
   }
 }
 
+// || SEED PHRASE DISPLAY ||
+class seedphraseDisplay extends HTMLElement {
+  constructor(seedphraseText) {
+    super();
+    const seedphraseDisplay__temp = document.createElement("template");
+    seedphraseDisplay__temp.innerHTML = `
+      <style>
+        @keyframes fadeIn {
+          100% {
+            opacity: 1;
+          }
+        }
+
+        .seedphrase__container {
+          max-width: 625px;
+          text-align: center;
+        }
+
+        .seedphrase__directive,
+        .seedphrase__content {
+          opacity: 0;
+        }
+
+        .seedphrase__directive {
+          font-size: 1.7rem;
+          animation: fadeIn 0.7s ease-in forwards;
+          margin-bottom: 0;
+        }
+
+        .seedphrase__content {
+          font-size: 1.25rem;
+          animation: fadeIn 0.7s 0.8s ease-in forwards;
+          margin: 5.5rem 0 2rem 0;
+        }
+
+        .seedphrase__acceptBTN {
+          opacity: 0;
+          color: #fff;
+          background: transparent;
+          animation: fadeIn 0.7s 2s ease-in forwards;
+          font: inherit;
+          border: solid 1.5px #fff;
+          padding: 0.5em;
+          font-size: 1.25rem;
+          outline-color: transparent;
+          border-radius: 30px;
+          transition: 0.4s all;
+        }
+
+        .seedphrase__acceptBTN:hover {
+          cursor: pointer;
+          background: #3a3a3a;
+        }
+      </style>
+
+      <div class="seedphrase__container">
+        <p class="seedphrase__directive">
+          Take a moment to copy your seed phrase.
+        </p>
+        <p class="seedphrase__content">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
+          voluptate nesciunt quidem eos, cumque dolorem totam excepturi
+          similique quasi iste!
+        </p>
+        <button class="seedphrase__acceptBTN">Accept Phrase</button>
+      </div>
+    `;
+    const shadow = this.attachShadow({ mode: "open" });
+    shadow.append(seedphraseDisplay__temp.content.cloneNode(true));
+
+    const seedphraseContent = shadow.querySelector(".seedphrase__content");
+    const acceptBTN = shadow.querySelector(".seedphrase__acceptBTN");
+    seedphraseContent.innerText = seedphraseText;
+
+    this.acceptPhrase = new Promise((resolve, reject) => {
+      acceptBTN.addEventListener("click", () => {
+        resolve(true);
+        console.log("resolved - user accepted seed phrase.");
+      });
+    });
+  }
+}
+
+// || ENCRYPTION MESSAGE ||
+class encryptionMessage extends HTMLElement {
+  constructor() {
+    super();
+    const encryptionMessage__temp = document.createElement("template");
+    encryptionMessage__temp.innerHTML = `
+      <style>
+      @keyframes fadeIn {
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .encryptionMessage__container {
+        opacity: 0;
+        animation: fadeIn 0.7s ease-in forwards;
+      }
+
+      .encryptionMessage__content {
+        font-size: 2rem;
+      }
+
+      .loadingSymbol {
+        display: inline;
+        max-width: 50px;
+        height: auto;
+        vertical-align: -0.65em;
+      }
+      </style>
+      <div class="encryptionMessage__container">
+        <p class="encryptionMessage__content">
+          Encrypting Intentions
+          <img class="loadingSymbol" src="https://i.gifer.com/ODkF.gif" alt="" />
+        </p>
+      </div>
+    `;
+
+    const shadow = this.attachShadow({ mode: "open" });
+    shadow.append(encryptionMessage__temp.content.cloneNode(true));
+  }
+}
+
 function declareComponents() {
   customElements.define("choose-ceremony", chooseCeremony);
   customElements.define("participant-input", getParticipants);
   customElements.define("conjuration-input", getConjurations);
+  customElements.define("seedphrase-display", seedphraseDisplay);
+  customElements.define("encryption-message", encryptionMessage);
 }
 
 // this is only for testing, remove once component is implemented into ceremony_ui.js
@@ -343,5 +479,7 @@ export default {
   chooseCeremony,
   getParticipants,
   getConjurations,
+  seedphraseDisplay,
+  encryptionMessage,
   declareComponents,
 };
