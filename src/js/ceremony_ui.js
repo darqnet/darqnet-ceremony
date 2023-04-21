@@ -9,7 +9,8 @@ import * as seedsplit from "./seedsplit.js";
 const bip39 = require("bip39");
 import CP from "./components.js";
 
-const API_URL = "https://ceramic-private.3boxlabs.com";
+// const API_URL = "https://ceramic-private.3boxlabs.com"; (Original API link used, throws CORS Error if used in browser)
+const API_URL = "https://ceramic-clay.3boxlabs.com";
 
 // Register Components
 CP.declareComponents();
@@ -109,29 +110,32 @@ async function openCircle() {
 
   replaceComponent(ceremonyContainer.childNodes[1], new CP.encryptionMessage());
 
-  // const ceramic = new CeramicClient(API_URL);
-  // ceramic.did = did;
-  // const doc = await TileDocument.create(
-  //   ceramic,
-  //   null,
-  //   { deterministic: true },
-  //   { anchor: false, publish: false }
-  // );
-  // await ceramic.pin.add(doc.id);
+  const ceramic = new CeramicClient(API_URL);
+  ceramic.did = did;
+  const doc = await TileDocument.create(
+    ceramic,
+    null,
+    { deterministic: true },
+    { anchor: false, publish: false }
+  );
 
-  // const jwe = await did.createDagJWE(
-  //   {
-  //     conjurationPrompt,
-  //     essencePrompt,
-  //     dreamPrompt,
-  //     conjurations,
-  //     essence,
-  //     dreams,
-  //   },
-  //   [did.id]
-  // );
-  // console.log(JSON.stringify(jwe));
-  // await doc.update(jwe);
+  // Error thrown here: 'ceramic.pin is undefined'
+  // encryption doesn't go through until this is resolved
+  await ceramic.pin.add(doc.id);
+
+  const jwe = await did.createDagJWE(
+    {
+      conjurationPrompt,
+      essencePrompt,
+      dreamPrompt,
+      conjurations,
+      essence,
+      dreams,
+    },
+    [did.id]
+  );
+  console.log(JSON.stringify(jwe));
+  await doc.update(jwe);
 }
 // async function openCircle() {
 //   const mnemonic = bip39.generateMnemonic();
