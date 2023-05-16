@@ -1,7 +1,11 @@
 "use strict";
 
+import $ from "./stores.js";
+
 // DOM
 const welcome = document.querySelector(".welcome");
+const ripple = document.querySelector(".ripple");
+const ceremonyContainer = document.querySelector(".ceremonyContainer");
 
 // COMPONENTS
 
@@ -64,23 +68,15 @@ class chooseCeremony extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(chooseCeremony__temp.content.cloneNode(true));
 
-    this.open = shadow.querySelector(".open");
-    this.close = shadow.querySelector(".close");
-    this.selection = new Promise((resolve, reject) => {
-      try {
-        this.open.addEventListener("click", () => {
-          resolve("open");
-        });
-      } catch (err) {
-        reject(err);
-      }
-      try {
-        this.close.addEventListener("click", () => {
-          resolve("close");
-        });
-      } catch (err) {
-        reject(err);
-      }
+    const open = shadow.querySelector(".open");
+    const close = shadow.querySelector(".close");
+    this.selection = new Promise((resolve) => {
+      open.addEventListener("click", () => {
+        resolve("open");
+      });
+      close.addEventListener("click", () => {
+        resolve("close");
+      });
     });
   }
 }
@@ -100,7 +96,7 @@ class getParticipants extends HTMLElement {
 
       input,
       button {
-        background: #0c0c0c;
+        background: transparent;
         font: inherit;
         transition: 0.4s all;
         border: transparent;
@@ -155,7 +151,6 @@ class getParticipants extends HTMLElement {
 
     const input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
-    this.acquired_participants = false;
 
     this.setPlaceholder = function (text) {
       let count = 1;
@@ -171,36 +166,31 @@ class getParticipants extends HTMLElement {
       }, 40);
     };
 
-    this.input_num = 0;
+    let gotPar = false;
+    let gotThresh = false;
 
-    this.get_ppl = function () {
-      this.acquired_participants = true;
-      this.input_num = input.value;
-      return input.value;
-    };
-
-    this.participantCount = new Promise((resolve, reject) => {
+    this.acquiredPT = new Promise((resolve) => {
       submitBTN.addEventListener("click", () => {
-        resolve(this.get_ppl());
+        if (!gotPar) {
+          $.participants = parseInt(input.value);
+          gotPar = true;
+          input.value = "";
+          input.setAttribute("placeholder", "");
+          this.setPlaceholder("What is your threshold? ");
+        } else if (!gotThresh) {
+          $.threshold = parseInt(input.value);
+          gotThresh = true;
+          input.setAttribute("placeholder", "");
+          input.value = "";
+          resolve(true);
+        }
       });
-    }).then(() => {
-      if (this.acquired_participants) {
-        input.setAttribute("placeholder", "");
-        input.value = "";
-        this.setPlaceholder("What is your threshold? ");
-
-        this.thresholdSize = new Promise((resolve, reject) => {
-          submitBTN.addEventListener("click", () => {
-            resolve(input.value);
-          });
-        });
-      }
     });
   }
 }
 
 class getConjurations extends HTMLElement {
-  constructor() {
+  constructor(ptNum) {
     super();
     const getConjurations__temp = document.createElement("template");
     getConjurations__temp.innerHTML = `
@@ -213,7 +203,7 @@ class getConjurations extends HTMLElement {
     
         textarea,
         button {
-          background: #0c0c0c;
+          background: transparent;
           font: inherit;
           transition: 0.4s all;
           border: transparent;
@@ -228,7 +218,7 @@ class getConjurations extends HTMLElement {
           outline: none;
           text-align: left;
           border: solid 1px #ffffff24;
-          min-height: 15rem;
+          min-height: 4rem;
           resize: none;
         }
     
@@ -256,17 +246,36 @@ class getConjurations extends HTMLElement {
     
         .input__container {
           display: flex;
+          align-items: center;
+          flex-direction: column;
           justify-content: space-evenly;
           width: 100%;
           max-width: 600px;
           margin: 0 auto;
         }
 
+        .input__area {
+          width: 95%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        p {
+          font-size: 1.5rem;
+          text-align: center;
+        }
+
       </style>
 
       <div class="input__container">
-        <textarea type="text" class="input"></textarea>
-        <button class="submit">&#10140;</button>
+        <p class="participant-label"></p>
+        <div class="input__area">
+          <textarea type="text" class="input"></textarea>
+          <button class="submit">&#10140;</button>
+        </div>
       </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
@@ -274,6 +283,8 @@ class getConjurations extends HTMLElement {
 
     const input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
+    const participantLabel = shadow.querySelector(".participant-label");
+    participantLabel.innerText = `Participant ${ptNum + 1}`;
 
     this.setPlaceholder = function (text) {
       let count = 1;
@@ -289,41 +300,34 @@ class getConjurations extends HTMLElement {
       }, 40);
     };
 
-    this.acquiredDreams = false;
-    this.acquiredConjurations = false;
-    this.acquiredEssence = false;
-
-    this.input_dream = [];
-    this.input_conjuration = [];
-    this.input_essence = [];
+    let acquiredDreams = false;
+    let acquiredConjurations = false;
+    let acquiredEssence = false;
 
     this.push_inputs = function () {
-      if (!this.acquiredDreams) {
-        this.input_dream.push(input.value);
-        this.acquiredDreams = true;
-        // console.log("dreams:", this.input_dream);
+      if (!acquiredDreams) {
+        $.dreams = [...$.dreams, input.value];
+        acquiredDreams = true;
         input.setAttribute("placeholder", "");
         input.value = "";
         this.setPlaceholder(" What will you conjure by the summer solstice?");
-      } else if (!this.acquiredConjurations) {
-        this.input_conjuration.push(input.value);
-        this.acquiredConjurations = true;
-        // console.log("conjurations:", this.input_conjuration);
+      } else if (!acquiredConjurations) {
+        $.conjurations = [...$.conjurations, input.value];
+        acquiredConjurations = true;
         input.setAttribute("placeholder", "");
         input.value = "";
         this.setPlaceholder(" Feel into the moment and capture its essence!");
-      } else if (this.acquiredDreams && this.acquiredConjurations) {
-        this.input_essence.push(input.value);
-        // console.log("moment's essence", this.input_essence);
-        this.acquiredEssence = true;
+      } else if (acquiredDreams && acquiredConjurations) {
+        $.essence = [...$.essence, input.value];
+        acquiredEssence = true;
       }
       return true;
     };
 
-    this.acquire_entries = new Promise((resolve, reject) => {
+    this.acquire_entries = new Promise((resolve) => {
       submitBTN.addEventListener("click", () => {
         this.push_inputs();
-        if (this.acquiredEssence) resolve(true);
+        if (acquiredEssence) resolve(true);
       });
     });
   }
@@ -386,7 +390,7 @@ class seedphraseDisplay extends HTMLElement {
 
       <div class="seedphrase__container">
         <p class="seedphrase__directive">
-          Take a moment to copy your seed phrase.
+          Make a note of your seed phrase.
         </p>
         <p class="seedphrase__content">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
@@ -453,13 +457,14 @@ class encryptionMessage extends HTMLElement {
       <div class="encryptionMessage__container">
         <p class="encryptionMessage__content">
           Encrypting Intentions
-          <img class="loadingSymbol" src="https://i.gifer.com/ODkF.gif" alt="" />
+          <img class="loadingSymbol" src="https://i.gifer.com/ODkF.gif" alt="blue flame" />
         </p>
       </div>
     `;
 
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(encryptionMessage__temp.content.cloneNode(true));
+    this.msg_content = shadow.querySelector(".encryptionMessage__content");
   }
 }
 
@@ -476,6 +481,8 @@ function declareComponents() {
 
 export default {
   welcome,
+  ripple,
+  ceremonyContainer,
   chooseCeremony,
   getParticipants,
   getConjurations,

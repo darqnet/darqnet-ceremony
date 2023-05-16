@@ -1,4 +1,4 @@
-const bip39 = require("bip39");
+import * as Bip39 from "bip39";
 import * as ssss from "sss-wasm";
 import * as uint8arrays from "uint8arrays";
 
@@ -7,18 +7,19 @@ const SECRET_LENGTH = 64;
 const lengthToPrefix = { 64: "", 56: "d", 48: "c", 40: "b", 32: "a" };
 const prefixToLength = { "": 64, d: 56, c: 48, b: 40, a: 32 };
 const getExtraEntopy = (length) =>
-  bip39
-    .mnemonicToEntropy(bip39.generateMnemonic(SECRET_LENGTH * 2))
-    .substring(0, SECRET_LENGTH - length);
+  Bip39.mnemonicToEntropy(Bip39.generateMnemonic(SECRET_LENGTH * 2)).substring(
+    0,
+    SECRET_LENGTH - length
+  );
 
 export async function split(seed, numShards, threshold) {
   if (threshold > numShards) {
     throw new Error("Threshold can't be larger than the number of shards");
   }
-  if (!bip39.validateMnemonic(seed)) {
+  if (!Bip39.validateMnemonic(seed)) {
     throw new Error("Invalid mnemonic");
   }
-  let ent = bip39.mnemonicToEntropy(seed);
+  let ent = Bip39.mnemonicToEntropy(seed);
   let prefix = lengthToPrefix[ent.length];
   ent = ent + getExtraEntopy(ent.length);
 
@@ -31,18 +32,18 @@ export async function split(seed, numShards, threshold) {
   return shards.map((shard) => {
     const slice = shard.slice(1);
     const hex = uint8arrays.toString(slice, "hex");
-    return prefix + shard[0] + " " + bip39.entropyToMnemonic(hex);
+    return prefix + shard[0] + " " + Bip39.entropyToMnemonic(hex);
   });
 }
 
 export async function combine(shardMnemonics) {
   let prefix = "";
   let shards = shardMnemonics.map((sm) => {
-    if (!bip39.validateMnemonic(sm.split(" ").slice(1).join(" "))) {
+    if (!Bip39.validateMnemonic(sm.split(" ").slice(1).join(" "))) {
       throw new Error("Invalid mnemonic " + sm.split(" ")[0]);
     }
     let buf = new Buffer.from(
-      "00" + bip39.mnemonicToEntropy(sm.split(" ").slice(1).join(" ")),
+      "00" + Bip39.mnemonicToEntropy(sm.split(" ").slice(1).join(" ")),
       "hex"
     );
 
@@ -57,7 +58,7 @@ export async function combine(shardMnemonics) {
 
   let combined = await ssss.combineKeyshares(shards);
   try {
-    return bip39.entropyToMnemonic(
+    return Bip39.entropyToMnemonic(
       combined.toString("hex").substring(0, prefixToLength[prefix])
     );
   } catch (e) {
