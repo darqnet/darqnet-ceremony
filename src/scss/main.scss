@@ -1,5 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap");
 
+:root {
+  $bg-dark: #050019;
+  font-family: "Didact Gothic", sans-serif;
+  color: #fff;
+  background-color: $bg-dark;
+}
+
 *,
 *::after,
 *::before {
@@ -13,18 +20,20 @@ body {
 }
 
 // ripple and candle flame color
-$purple: #1942f9;
+// $purple: #1942f9;
+$orange: rgb(230, 42, 4);
+$ripple-bg: #08081a;
 
 // || ANIMATIONS
 
 @keyframes ripple {
   0% {
-    box-shadow: 0 0 0 0 rgba($purple, 0.08), 0 0 0 40px rgba($purple, 0.08),
-      0 0 0 60px rgba($purple, 0.08), 0 0 0 80px rgba($purple, 0.08);
+    box-shadow: 0 0 0 0 rgba($orange, 0.08), 0 0 0 40px rgba($orange, 0.08),
+      0 0 0 60px rgba($orange, 0.08), 0 0 0 80px rgba($orange, 0.08);
   }
   100% {
-    box-shadow: 0 0 0 40px rgba($purple, 0.08), 0 0 0 60px rgba($purple, 0.08),
-      0 0 0 80px rgba($purple, 0.08), 0 0 0 100px rgba($purple, 0);
+    box-shadow: 0 0 0 40px rgba($orange, 0.08), 0 0 0 60px rgba($orange, 0.08),
+      0 0 0 80px rgba($orange, 0.08), 0 0 0 100px rgba($orange, 0);
   }
 }
 
@@ -58,10 +67,7 @@ img {
 }
 
 body {
-  font-family: "Didact Gothic", sans-serif;
-  color: #fff;
   min-height: 100vh;
-  background-color: #0c0c0c;
   display: grid;
   place-items: center;
 }
@@ -75,16 +81,19 @@ button {
 }
 
 .ripple {
+  opacity: 0;
   min-height: 700px;
   width: 100%;
   border-radius: 50%;
   animation: ripple 1.5s linear infinite;
   // animation: heptagram 6s ease-in;
   filter: blur(4px);
-  // background-color: transparent;
+  background-color: $ripple-bg;
+  // #0a0a1e
   // border: solid 1px #ffffff5f;
   position: absolute;
   z-index: -1;
+  transition: opacity 2.2s;
 }
 
 .ceremonyContainer {
