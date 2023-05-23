@@ -423,43 +423,123 @@ class encryptionMessage extends HTMLElement {
     const encryptionMessage__temp = document.createElement("template");
     encryptionMessage__temp.innerHTML = `
       <style>
-      @keyframes fadeIn {
-        100% {
-          opacity: 1;
+        .container {
+          max-width: 16rem;
         }
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+        
+        .flame-container {
+          /* border: solid 1px #fff; */
+          position: absolute;
+          width: 10%;
+          bottom: 1rem;
+          display: flex;
+          justify-content: center;
+          /* animation: rotateFlames 4s linear infinite; */
         }
-        100% {
-          transform: rotate(360deg);
+        
+        .flame-base {
+          min-height: 1rem;
+          max-width: 2rem;
+          width: 100%;
+          background-color: #fad1b5;
+          border-radius: 1rem 1rem 0 0;
+          transform: rotate(180deg);
+          filter: drop-shadow(0 0 0.3em #ffc881);
+          z-index: 4;
+          margin: 8rem 0 1rem 0;
         }
-      }
+        
+        .flame {
+          position: absolute;
+          z-index: -1;
+          opacity: 0;
+          bottom: 0.4rem;
+          min-height: 1.5rem;
+          max-width: 1.5rem;
+          width: 100%;
+          /* #f1b162 */
+          background-color: #fbe995;
+          filter: drop-shadow(0 0 0.3em #ffe366);
+          border-radius: 56% 44% 88% 12% / 100% 0% 100% 0%;
+          transform: rotate(-40deg);
+        }
+        
+        .flame-1 {
+          animation: float 1.5s infinite;
+        }
+        
+        .flame-2 {
+          animation: float 1.5s 1s infinite;
+        }
+        
+        .flame-3 {
+          animation: float 1.5s 2s infinite;
+        }
+        
+        .orb-container {
+          position: relative;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          filter: blur(0.07rem);
+          border-bottom: solid 1px #fff;
+          border-radius: 50%;
+        }
+        
+        .orb {
+          min-height: 4.5rem;
+          max-width: 4.5rem;
+          width: 100%;
+          background-image: var(--dark-gradient);
+          background-size: 300%;
+          filter: drop-shadow(0 0 0.3em #fbc381);
+          background-position: right;
+          border: solid 2px var(--dark-gradient);
+          animation: shiftGradient 1.2s infinite ease-in-out alternate;
+          border-radius: 50%;
+          transform: translateY(2.5rem);
+        }
 
-      .encryptionMessage__container {
-        opacity: 0;
-        animation: fadeIn 0.7s ease-in forwards;
-      }
-
-      .encryptionMessage__content {
-        font-size: 2rem;
-      }
-
-      .loadingSymbol {
-        display: inline;
-        max-width: 50px;
-        height: auto;
-        vertical-align: -0.65em;
-      }
+        .encryptionMessage__content {
+          text-align: center;
+        }
+        
+        @keyframes shiftGradient {
+          100% {
+            filter: drop-shadow(0 0 0.9em #fbc381);
+            background-position: left;
+            border: solid 2px var(--light-gradient);
+            transform: translateY(3.2rem);
+          }
+        }
+        
+        @keyframes float {
+          40% {
+            opacity: 1;
+          }
+          80% {
+            transform: translate(0rem, -5.5rem);
+          }
+          90% {
+            opacity: 0;
+          }
+          100% {
+            min-height: 0;
+          }
+        }
       </style>
-      <div class="encryptionMessage__container">
-        <p class="encryptionMessage__content">
-          Encrypting Intentions
-          <img class="loadingSymbol" src="https://i.gifer.com/ODkF.gif" alt="blue flame" />
-        </p>
+      <div class="orb-container container">
+        <div class="orb"></div>
+          <div class="flame-container container">
+            <div class="flame flame-1"></div>
+            <div class="flame flame-2"></div>
+            <div class="flame flame-3"></div>
+          </div>
+        <div class="flame-base"></div>
       </div>
+      <h2 class="encryptionMessage__content">Encrypting Intentions<h2>
     `;
 
     const shadow = this.attachShadow({ mode: "open" });

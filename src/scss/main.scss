@@ -5,6 +5,22 @@
   font-family: "Didact Gothic", sans-serif;
   color: #fff;
   background-color: $bg-dark;
+  --dark-gradient: linear-gradient(
+    to right bottom,
+    #fbc381,
+    #e1995a,
+    #c76f38,
+    #ac441c,
+    #900505
+  );
+  --light-gradient: linear-gradient(
+    to right bottom,
+    #fbc381,
+    #eeae6d,
+    #e1995a,
+    #d48448,
+    #c76f38
+  );
 }
 
 *,
@@ -159,7 +175,8 @@ button {
   margin-right: 1em;
 }
 
-conjuration-input {
+conjuration-input,
+encryption-message {
   width: 100%;
 }
 
