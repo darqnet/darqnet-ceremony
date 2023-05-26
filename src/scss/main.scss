@@ -21,6 +21,23 @@
     #d48448,
     #c76f38
   );
+  --success-gradient: linear-gradient(
+    to right bottom,
+    #ff5555,
+    #e1423f,
+    #c42f2a,
+    #a71b16,
+    #8b0000
+  );
+
+  --success-border: linear-gradient(
+    to right bottom,
+    #fd4444,
+    #da3533,
+    #b82522,
+    #971513,
+    #780202
+  );
 }
 
 *,

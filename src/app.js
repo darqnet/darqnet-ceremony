@@ -16,7 +16,7 @@ const API_URL = "https://ceramic-clay.3boxlabs.com";
 CP.declareComponents();
 export const choose_cer__cmpt = new CP.chooseCeremony();
 const get_participants__cmpt = new CP.getParticipants();
-const pending_encryption__cmpt = new CP.encryptionMessage();
+let encryptionMessage__cmpt;
 
 // Start Ceremony
 async function startCeremony() {
@@ -76,9 +76,10 @@ async function openCircle() {
     await seedphraseDisplay.acceptPhrase;
   }
 
+  encryptionMessage__cmpt = new CP.encryptionMessage();
   $.replaceComponent(
     CP.ceremonyContainer.childNodes[1],
-    pending_encryption__cmpt
+    encryptionMessage__cmpt
   );
 
   // const ceramic = new CeramicClient(API_URL);
@@ -114,24 +115,16 @@ async function openCircle() {
   // The commented-out code below is for implementing a transition effect at the end when developing so there isn't an api call every time I want to test
   // (comment out the api interaction when testing)
   // {
-  const transition = new Promise((resolve, reject) => {
+  const transition = new Promise((resolve) => {
     setTimeout(() => {
       console.log("transitioning");
       resolve("transitioning");
-    }, 8000);
+    }, 10500);
   });
 
   await transition;
   // }
-
-  pending_encryption__cmpt.style.opacity = 0;
-  pending_encryption__cmpt.style.transitionDuration = "1s";
-
-  setTimeout(() => {
-    pending_encryption__cmpt.style.opacity = 1;
-    pending_encryption__cmpt.style.transitionDuration = "1s";
-    pending_encryption__cmpt.msg_content.innerText = "Ceremony Complete.";
-  }, 1500);
+  encryptionMessage__cmpt.encryptionComplete();
 }
 
 // async function closeCircle() {

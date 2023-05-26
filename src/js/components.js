@@ -428,13 +428,11 @@ class encryptionMessage extends HTMLElement {
         }
         
         .flame-container {
-          /* border: solid 1px #fff; */
           position: absolute;
           width: 10%;
           bottom: 1rem;
           display: flex;
           justify-content: center;
-          /* animation: rotateFlames 4s linear infinite; */
         }
         
         .flame-base {
@@ -447,6 +445,12 @@ class encryptionMessage extends HTMLElement {
           filter: drop-shadow(0 0 0.3em #ffc881);
           z-index: 4;
           margin: 8rem 0 1rem 0;
+          transition: 0.5s all;
+        }
+        
+        .flame-base[type="success"] {
+          background-color: #e1423f;
+          filter: drop-shadow(0 0 0.3em #ff5555);
         }
         
         .flame {
@@ -462,21 +466,24 @@ class encryptionMessage extends HTMLElement {
           filter: drop-shadow(0 0 0.3em #ffe366);
           border-radius: 56% 44% 88% 12% / 100% 0% 100% 0%;
           transform: rotate(-40deg);
+          transition: 0.5s all;
         }
         
         .flame-1 {
-          animation: float 1.5s infinite;
+          animation: float 1.5s 0.5s 5;
         }
         
         .flame-2 {
-          animation: float 1.5s 1s infinite;
+          animation: float 1.5s 1s 5;
         }
         
         .flame-3 {
-          animation: float 1.5s 2s infinite;
+          animation: float 1.5s 1.5s 5;
         }
         
         .orb-container {
+          opacity: 0;
+          animation: fadeIn 0.7s ease-in forwards;
           position: relative;
           margin: 0 auto;
           display: flex;
@@ -500,10 +507,13 @@ class encryptionMessage extends HTMLElement {
           animation: shiftGradient 1.2s infinite ease-in-out alternate;
           border-radius: 50%;
           transform: translateY(2.5rem);
+          transition: 0.5s all;
         }
-
-        .encryptionMessage__content {
-          text-align: center;
+        
+        .orb[type="success"] {
+          background-image: var(--success-gradient);
+          filter: drop-shadow(0 0 0.9em #ac441c);
+          animation: successGradient 1.2s infinite ease-in-out alternate;
         }
         
         @keyframes shiftGradient {
@@ -511,6 +521,15 @@ class encryptionMessage extends HTMLElement {
             filter: drop-shadow(0 0 0.9em #fbc381);
             background-position: left;
             border: solid 2px var(--light-gradient);
+            transform: translateY(3.2rem);
+          }
+        }
+        
+        @keyframes successGradient {
+          100% {
+            filter: drop-shadow(0 0 0.9em #fd4444);
+            background-position: left;
+            border: solid 2px var(--success-border);
             transform: translateY(3.2rem);
           }
         }
@@ -529,22 +548,61 @@ class encryptionMessage extends HTMLElement {
             min-height: 0;
           }
         }
+
+        @keyframes fadeIn {
+          100% {
+            opacity: 1;
+          }
+        }
+
+        .encryptionMessage__content {
+          opacity: 0;
+          text-align: center;
+          transition: 0.5s all;
+        }
       </style>
       <div class="orb-container container">
-        <div class="orb"></div>
+        <div class="orb" type="default"></div>
           <div class="flame-container container">
             <div class="flame flame-1"></div>
             <div class="flame flame-2"></div>
             <div class="flame flame-3"></div>
           </div>
-        <div class="flame-base"></div>
+        <div class="flame-base" type="default"></div>
       </div>
-      <h2 class="encryptionMessage__content">Encrypting Intentions<h2>
+      <h2 class="encryptionMessage__content">Encrypting Intentions</h2>
     `;
 
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(encryptionMessage__temp.content.cloneNode(true));
     this.msg_content = shadow.querySelector(".encryptionMessage__content");
+
+    this.encryptionComplete = function () {
+      setTimeout(() => {
+        console.log("fading back in msg");
+        this.msg_content.style.opacity = 1;
+        this.msg_content.innerText = "Ceremony Complete.";
+      }, 1500);
+      setTimeout(() => {
+        this.msg_content.style.opacity = 0;
+      }, 5000);
+    };
+
+    const orb = shadow.querySelector(".orb");
+    const base = shadow.querySelector(".flame-base");
+
+    setTimeout(() => {
+      this.msg_content.style.opacity = 1;
+    }, 2500);
+    setTimeout(() => {
+      orb.style.opacity = 0;
+      this.msg_content.style.opacity = 0;
+    }, 9500);
+    setTimeout(() => {
+      orb.setAttribute("type", "success");
+      orb.style.opacity = 1;
+      base.setAttribute("type", "success");
+    }, 10500);
   }
 }
 
