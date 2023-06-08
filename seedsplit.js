@@ -57,9 +57,7 @@ export async function combine(shardMnemonics) {
 
   let combined = await ssss.combineKeyshares(shards);
   try {
-    return bip39.entropyToMnemonic(
-      combined.toString("hex").substring(0, prefixToLength[prefix])
-    );
+    return bip39.entropyToMnemonic(combined);
   } catch (e) {
     throw new Error("Could not combine the given mnemonics");
   }
