@@ -16,67 +16,240 @@ class chooseCeremony extends HTMLElement {
     const chooseCeremony__temp = document.createElement("template");
     chooseCeremony__temp.innerHTML = `
     <style>
-    @keyframes fadeIn {
+      .container {
+        margin: 0 auto;
+        max-width: 700px;
+        width: 100%;
+      }
+      
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+      
+      .selection-options {
+        opacity: 0;
+        animation: fadeIn 0.4s ease-in forwards;
+        gap: 0rem;
+        margin-top: 2rem;
+        align-items: flex-end;
+        justify-content: space-evenly;
+      }
+      
+      .flame-container,
+      .flame {
+        min-height: 1.5rem;
+        max-width: 1.5rem;
+        width: 100%;
+      }
+      
+      .flame-container {
+        position: absolute;
+        filter: blur(0.07rem);
+        display: inline;
+      }
+      
+      .flame-circle {
+        position: relative;
+        min-height: 6.5rem;
+        width: 6.5rem;
+        border-radius: 50%;
+        animation: rotate 3.3s linear infinite;
+      }
+      
+      .flame {
+        border-radius: 56% 44% 88% 12% / 100% 0% 100% 0%;
+        transform: rotate(-40deg);
+        animation: dissolve 1.5s 0.1s ease-in-out infinite alternate;
+        transition: 0.5s all;
+        background: var(--flame-color);
+        filter: drop-shadow(0 0 0.8em #6c85f9);
+      }
+      
+      .flame-1 {
+        top: -0.6rem;
+        right: 2.4rem;
+        rotate: 90deg;
+      }
+      
+      .flame-2 {
+        bottom: 0.8rem;
+        left: -0.3rem;
+        rotate: -30deg;
+      }
+      
+      .flame-3 {
+        bottom: 0.6rem;
+        right: -0.2rem;
+        rotate: 210deg;
+      }
+      
+      .selection-buttons {
+        display: flex;
+        gap: 3.5rem;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 4.5rem;
+      }
+      
+      .btn {
+        opacity: 0;
+        animation: fadeIn 0.4s 1.8s ease-in forwards;
+        color: #fff;
+        font: inherit;
+        text-align: center;
+        font-size: 1.6rem;
+        display: block;
+        padding: 0 1.3em 1.3em 1.3em;
+        background: transparent;
+        border: transparent;
+        border-radius: 50%;
+        transition: 0.4s all;
+        filter: drop-shadow(0 0 0.5em var(--flame-color));
+      }
+      
+      .btn:hover,
+      .btn:focus {
+        cursor: pointer;
+        color: #999999;
+        outline: transparent;
+      }
+      
+      .teardrop-wrap {
+        margin: 0 auto;
+        margin-bottom: 6.5rem;
+        min-height: 2rem;
+        width: 2rem;
+        filter: blur(0.025rem);
+      }
+      
+      .teardrop {
+        opacity: 0;
+        animation: fadeIn 0.4s 1.2s ease-in forwards;
+        position: relative;
+        margin: 0 auto;
+        min-height: 2rem;
+        width: 2rem;
+        border-radius: 95% 15% 100% 0% / 100% 15% 95% 0%;
+        border: solid 1px transparent;
+        background: #fff;
+        rotate: -45deg;
+        filter: drop-shadow(0 0 0.5em #fff);
+        transition: 0.5s all;
+      }
+      
+      .teardrop::after {
+        content: "";
+        position: absolute;
+        width: 3rem;
+        min-height: 3rem;
+        border-bottom: solid 2px var(--flame-color);
+        border-radius: 50%;
+        left: 0.2rem;
+        bottom: 0.2rem;
+        rotate: 225deg;
+      }
+      
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        20% {
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      
+      @keyframes dissolve {
+        100% {
+          rotate: 240deg;
+          min-height: 0.1rem;
+        }
+      }
+
+      @keyframes fadeIn {
         100% {
           opacity: 1;
         }
       }
-
-    .chooseCeremony__container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5em;
-        opacity: 0;
-        animation: fadeIn 0.5s ease-in forwards;
-      }
-      
-      .button__container {
-        display: flex;
-        gap: 1.6em;
-      }
-      
-      .cerBtn {
-        font-size: 1rem;
-        padding: 1em;
-        border-radius: 30px;
-        border: solid 2px #fff;
-        background-color: transparent;
-        color: #fff;
-        transition: 0.2s all;
-      }
-      
-      .cerBtn:hover,
-      .cerBtn:focus {
-        background-color: #1a1a1a;
-        cursor: pointer;
-      }
-      
-      .cerBtn + .cerBtn {
-        margin-right: 1em;
-      }
     </style>
-    <div class="chooseCeremony__container">
-        <h2>What ceremony will this be?</h2>
-        <div class="button__container">
-          <button class="cerBtn open">Opening</button>
-          <button class="cerBtn close">Closing</button>
+    <div class="container">
+      <div class="teardrop-wrap">
+        <div class="teardrop"></div>
+      </div>
+      <div class="row selection-options">
+        <div class="flame-circle">
+          <div class="flame-container flame-1">
+            <div class="flame"></div>
+          </div>
+          <div class="flame-container flame-2">
+            <div class="flame"></div>
+          </div>
+          <div class="flame-container flame-3">
+            <div class="flame"></div>
+          </div>
         </div>
+      </div>
+      <div class="selection-buttons">
+        <button class="btn btn-open">Opening Ceremony</button>
+        <button class="btn btn-close">Closing Ceremony</button>
+      </div>
     </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(chooseCeremony__temp.content.cloneNode(true));
 
-    const open = shadow.querySelector(".open");
-    const close = shadow.querySelector(".close");
+    const flames = Array.from(shadow.querySelectorAll(".flame"));
+    const teardrop = shadow.querySelector(".teardrop");
+    const openBtn = shadow.querySelector(".btn-open");
+    const closeBtn = shadow.querySelector(".btn-close");
     this.selection = new Promise((resolve) => {
-      open.addEventListener("click", () => {
+      openBtn.addEventListener("click", () => {
         resolve("open");
       });
-      close.addEventListener("click", () => {
+      closeBtn.addEventListener("click", () => {
         resolve("close");
       });
+    });
+    openBtn.addEventListener("mouseover", () => {
+      flames.map((e) => {
+        e.style.background = "var(--open-circle)";
+        e.style.filter = "drop-shadow(0 0 0.8em var(--open-circle))";
+      });
+      teardrop.style.background = "var(--open-circle)";
+      teardrop.style.filter = "drop-shadow(0 0 0.8em var(--open-circle))";
+      teardrop.style.transform = "rotate(15deg)";
+    });
+    openBtn.addEventListener("mouseout", () => {
+      flames.map((e) => {
+        e.style.background = "var(--flame-color)";
+        e.style.filter = "drop-shadow(0 0 0.8em #6c85f9)";
+      });
+      teardrop.style.background = "#fff";
+      teardrop.style.filter = "drop-shadow(0 0 0.5em #fff)";
+      teardrop.style.transform = "rotate(0deg)";
+    });
+    closeBtn.addEventListener("mouseover", () => {
+      flames.map((e) => {
+        e.style.background = "var(--close-circle)";
+        e.style.filter = "drop-shadow(0 0 0.8em var(--close-circle))";
+      });
+      teardrop.style.background = "var(--close-circle)";
+      teardrop.style.filter = "drop-shadow(0 0 0.8em var(--close-circle))";
+      teardrop.style.transform = "rotate(-15deg)";
+    });
+    closeBtn.addEventListener("mouseout", () => {
+      flames.map((e) => {
+        e.style.background = "var(--flame-color)";
+        e.style.filter = "drop-shadow(0 0 0.8em #6c85f9)";
+      });
+      teardrop.style.background = "#fff";
+      teardrop.style.filter = "drop-shadow(0 0 0.5em #fff";
+      teardrop.style.transform = "rotate(0deg)";
     });
   }
 }
@@ -106,7 +279,7 @@ class getParticipants extends HTMLElement {
         color: #fff;
         border-radius: 30px;
         padding: 0.5em;
-        font-size: 2rem;
+        font-size: 1.85rem;
         width: 85%;
         outline: none;
         text-align: right;

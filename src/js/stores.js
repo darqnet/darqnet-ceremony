@@ -15,14 +15,14 @@ const essence = [];
 // *
 // Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve) => {
-  setTimeout(() => {
-    CP.ripple.style.opacity = "1";
-  }, 3000);
+  // setTimeout(() => {
+  //   CP.ripple.style.opacity = "1";
+  // }, 3000);
   setTimeout(() => {
     CP.welcome.replaceWith(choose_cer__cmpt);
     resolve(true);
     console.log("Welcome to Darqnet 🔮");
-  }, 6000);
+  }, 7500);
 });
 // Smoothly transitions between components
 function replaceComponent(current, replacement) {
