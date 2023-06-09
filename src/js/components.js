@@ -277,12 +277,13 @@ class getParticipants extends HTMLElement {
 
       .input {
         color: #fff;
-        border-radius: 30px;
+        border-radius: 50%;
         padding: 0.5em;
-        font-size: 1.85rem;
-        width: 85%;
+        font-size: 2.3rem;
+        width: 100%;
         outline: none;
-        text-align: right;
+        text-align: center;
+        border-bottom: solid 1px var(--flame-color);
       }
 
       .input::placeholder {
@@ -291,53 +292,101 @@ class getParticipants extends HTMLElement {
       }
 
       .submit {
-        opacity: 0;
-        animation: fadeIn 0.5s 1.3s ease-in forwards;
-        font-size: 1.5rem;
+        font-size: 2.7rem;
         outline-color: transparent;
-        color: #808080;
+        color: #fff;
+        filter: drop-shadow(0 0 0.1em var(--flame-color));
         border-radius: 50%;
         width: min-content;
       }
 
-      .submit:hover {
+      .submit:hover,
+      .submit:focus {
         cursor: pointer;
-        color: #fff;
+        color: #9d9d9d;
+        outline: transparent;
       }
 
       .input__container {
+        opacity: 0;
+        animation: fadeIn 0.4s 2.2s ease-in forwards;
         display: flex;
-        justify-content: space-evenly;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.1rem;
         width: 100%;
-        max-width: 600px;
+        max-width: 150px;
         margin: 0 auto;
+        margin-top: 4.5rem;
+      }
+
+      .query__container {
+        max-width: 600px;
+        width: 100%;
+      }
+
+      .queryText {
+        opacity: 0;
+        font-size: 2.1rem;
+        text-align: center;
+        filter: drop-shadow(0 0 0.1em var(--flame-color));
+        animation: fadeIn 0.4s 1.8s ease-in forwards;
+        transition: 1s all;
+      }
+
+      .teardrop-wrap {
+        margin: 0 auto;
+        margin-bottom: 6.5rem;
+        min-height: 2rem;
+        width: 2rem;
+        filter: blur(0.025rem);
+      }
+
+      .teardrop {
+        opacity: 0;
+        animation: fadeIn 0.4s 0.8s ease-in forwards;
+        position: relative;
+        margin: 0 auto;
+        min-height: 2rem;
+        width: 2rem;
+        border-radius: 95% 15% 100% 0% / 100% 15% 95% 0%;
+        border: solid 1px transparent;
+        background: var(--open-circle);
+        rotate: -45deg;
+        filter: drop-shadow(0 0 0.8em var(--open-circle));
+        transition: 0.5s all;
+      }
+
+      .teardrop::after {
+        content: "";
+        position: absolute;
+        width: 3rem;
+        min-height: 3rem;
+        border-bottom: solid 2px var(--flame-color);
+        border-radius: 50%;
+        left: 0.2rem;
+        bottom: 0.2rem;
+        rotate: 225deg;
       }
     </style>
 
-    <div class="input__container">
-        <input type="text" class="input" />
-        <button class="submit">&#10140;</button>
+    <div class="query__container">
+        <div class="teardrop-wrap">
+          <div class="teardrop"></div>
+        </div>
+        <p class="queryText">How many have gathered?</p>
+        <div class="input__container">
+          <input type="text" class="input" autofocus />
+          <button class="submit">⤗</button>
+        </div>
     </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(getParticipants__temp.content.cloneNode(true));
 
-    const input = shadow.querySelector(".input");
+    this.input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
-
-    this.setPlaceholder = function (text) {
-      let count = 1;
-      const loadText = setInterval(() => {
-        if (count <= text.length) {
-          let text_segment = text.slice(0, count);
-          input.setAttribute("placeholder", text_segment);
-          count++;
-        } else {
-          input.focus();
-          clearInterval(loadText);
-        }
-      }, 40);
-    };
+    const queryText1 = shadow.querySelector(".queryText");
 
     let gotPar = false;
     let gotThresh = false;
@@ -345,17 +394,20 @@ class getParticipants extends HTMLElement {
     this.acquiredPT = new Promise((resolve) => {
       submitBTN.addEventListener("click", () => {
         if (!gotPar) {
-          $.participants = parseInt(input.value);
-          gotPar = true;
-          input.value = "";
-          input.setAttribute("placeholder", "");
-          this.setPlaceholder("What is your threshold? ");
+          if (!isNaN(parseInt(this.input.value))) {
+            $.participants = parseInt(this.input.value);
+            gotPar = true;
+            queryText1.innerText = "What is your threshold?";
+            this.input.value = "";
+            this.input.focus();
+          }
         } else if (!gotThresh) {
-          $.threshold = parseInt(input.value);
-          gotThresh = true;
-          input.setAttribute("placeholder", "");
-          input.value = "";
-          resolve(true);
+          if (!isNaN(parseInt(this.input.value))) {
+            $.threshold = parseInt(this.input.value);
+            gotThresh = true;
+            this.input.value = "";
+            resolve(true);
+          }
         }
       });
     });
@@ -597,7 +649,7 @@ class encryptionMessage extends HTMLElement {
     encryptionMessage__temp.innerHTML = `
       <style>
         .container {
-          max-width: 16rem;
+          max-width: 18rem;
         }
         
         .flame-container {
@@ -609,11 +661,11 @@ class encryptionMessage extends HTMLElement {
         }
         
         .flame-base {
-          min-height: 1rem;
-          max-width: 2rem;
+          min-height: 1.25rem;
+          max-width: 2.5rem;
           width: 100%;
           background-color: #fad1b5;
-          border-radius: 1rem 1rem 0 0;
+          border-radius: 2.5rem 2.5rem 0 0;
           transform: rotate(180deg);
           filter: drop-shadow(0 0 0.3em #ffc881);
           z-index: 4;
@@ -631,8 +683,8 @@ class encryptionMessage extends HTMLElement {
           z-index: -1;
           opacity: 0;
           bottom: 0.4rem;
-          min-height: 1.5rem;
-          max-width: 1.5rem;
+          min-height: 1.8rem;
+          max-width: 1.8rem;
           width: 100%;
           /* #f1b162 */
           background-color: #fbe995;
@@ -669,8 +721,8 @@ class encryptionMessage extends HTMLElement {
         }
         
         .orb {
-          min-height: 4.5rem;
-          max-width: 4.5rem;
+          min-height: 5.5rem;
+          max-width: 5.5rem;
           width: 100%;
           background-image: var(--dark-gradient);
           background-size: 300%;

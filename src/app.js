@@ -25,13 +25,12 @@ async function startCeremony() {
   if (loaded) {
     choose_cer__html = document.querySelector("choose-ceremony");
   }
-
   const ceremonyType = await choose_cer__cmpt.selection;
   if (ceremonyType === "open") {
     console.log("opening ceremony.");
     $.replaceComponent(choose_cer__html, get_participants__cmpt);
     setTimeout(() => {
-      get_participants__cmpt.setPlaceholder("How many have gathered? ");
+      get_participants__cmpt.input.focus();
     }, 1000);
     await openCircle();
   } else if (ceremonyType === "close") {
