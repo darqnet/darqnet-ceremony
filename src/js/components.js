@@ -582,47 +582,86 @@ class seedphraseDisplay extends HTMLElement {
         }
 
         .seedphrase__directive {
-          font-size: 1.7rem;
-          animation: fadeIn 0.7s ease-in forwards;
-          margin-bottom: 0;
+          font-size: 1.8rem;
+          filter: drop-shadow(0 0 0.4em var(--flame-color));
+          animation: fadeIn 0.4s 1.2s ease-in forwards;
+          margin: 0;
         }
 
         .seedphrase__content {
-          font-size: 1.25rem;
-          animation: fadeIn 0.7s 0.8s ease-in forwards;
-          margin: 5.5rem 0 2rem 0;
+          font-size: 1.35rem;
+          animation: fadeIn 0.4s 1.9s ease-in forwards;
+          margin: 4.7rem 0 2rem 0;
+          color: #4d58ff;
         }
 
         .seedphrase__acceptBTN {
           opacity: 0;
+          font-size: 2.7rem;
+          outline: transparent;
           color: #fff;
+          filter: drop-shadow(0 0 0.1em var(--flame-color));
+          border-radius: 50%;
           background: transparent;
-          animation: fadeIn 0.7s 2s ease-in forwards;
-          font: inherit;
-          border: solid 1.5px #fff;
-          padding: 0.5em;
-          font-size: 1.25rem;
-          outline-color: transparent;
-          border-radius: 30px;
           transition: 0.4s all;
+          border: transparent;
+          animation: fadeIn 0.4s 2.5s ease-in forwards;
         }
 
-        .seedphrase__acceptBTN:hover {
+        .seedphrase__acceptBTN:hover,
+        .seedphrase__acceptBTN:focus {
           cursor: pointer;
-          background: #3a3a3a;
+          color: #9d9d9d;
+          outline: transparent;
+        }
+
+        .teardrop-wrap {
+          margin: 0 auto;
+          margin-bottom: 6.5rem;
+          min-height: 2rem;
+          width: 2rem;
+          filter: blur(0.025rem);
+        }
+
+        .teardrop {
+          opacity: 0;
+          animation: fadeIn 0.4s 0.8s ease-in forwards;
+          position: relative;
+          margin: 0 auto;
+          min-height: 2rem;
+          width: 2rem;
+          border-radius: 95% 15% 100% 0% / 100% 15% 95% 0%;
+          border: solid 1px transparent;
+          background: var(--open-circle);
+          rotate: -45deg;
+          filter: drop-shadow(0 0 0.8em var(--open-circle));
+          transition: 0.5s all;
+        }
+
+        .teardrop::after {
+          content: "";
+          position: absolute;
+          width: 3rem;
+          min-height: 3rem;
+          border-bottom: solid 2px var(--flame-color);
+          border-radius: 50%;
+          left: 0.2rem;
+          bottom: 0.2rem;
+          rotate: 225deg;
         }
       </style>
 
       <div class="seedphrase__container">
-        <p class="seedphrase__directive">
-          Make a note of your seed phrase.
-        </p>
+        <div class="teardrop-wrap">
+          <div class="teardrop"></div>
+        </div>
+        <p class="seedphrase__directive">Make a note of your seed phrase.</p>
         <p class="seedphrase__content">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
           voluptate nesciunt quidem eos, cumque dolorem totam excepturi
           similique quasi iste!
         </p>
-        <button class="seedphrase__acceptBTN">Accept Phrase</button>
+        <button class="seedphrase__acceptBTN">⤗</button>
       </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
@@ -664,10 +703,10 @@ class encryptionMessage extends HTMLElement {
           min-height: 1.25rem;
           max-width: 2.5rem;
           width: 100%;
-          background-color: #fad1b5;
+          background-color: #fff;
           border-radius: 2.5rem 2.5rem 0 0;
           transform: rotate(180deg);
-          filter: drop-shadow(0 0 0.3em #ffc881);
+          filter: drop-shadow(0 0 0.3em #fff);
           z-index: 4;
           margin: 8rem 0 1rem 0;
           transition: 0.5s all;
@@ -716,7 +755,7 @@ class encryptionMessage extends HTMLElement {
           align-items: center;
           justify-content: center;
           filter: blur(0.07rem);
-          border-bottom: solid 1px #fff;
+          border-bottom: solid 1px var(--flame-color);
           border-radius: 50%;
         }
         
@@ -782,6 +821,9 @@ class encryptionMessage extends HTMLElement {
 
         .encryptionMessage__content {
           opacity: 0;
+          font-size: 2.1rem;
+          text-align: center;
+          filter: drop-shadow(0 0 0.1em var(--flame-color));
           text-align: center;
           transition: 0.5s all;
         }
@@ -795,7 +837,7 @@ class encryptionMessage extends HTMLElement {
           </div>
         <div class="flame-base" type="default"></div>
       </div>
-      <h2 class="encryptionMessage__content">Encrypting Intentions</h2>
+      <p class="encryptionMessage__content">Encrypting Intentions</p>
     `;
 
     const shadow = this.attachShadow({ mode: "open" });
