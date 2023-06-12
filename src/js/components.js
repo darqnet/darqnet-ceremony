@@ -849,10 +849,10 @@ class encryptionMessage extends HTMLElement {
         console.log("fading back in msg");
         this.msg_content.style.opacity = 1;
         this.msg_content.innerText = "Ceremony Complete.";
-      }, 1500);
+      }, 10500);
       setTimeout(() => {
         this.msg_content.style.opacity = 0;
-      }, 5000);
+      }, 14000);
     };
 
     const orb = shadow.querySelector(".orb");
