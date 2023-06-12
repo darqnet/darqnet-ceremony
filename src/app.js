@@ -81,47 +81,47 @@ async function openCircle() {
     encryptionMessage__cmpt
   );
 
-  // const ceramic = new CeramicClient(API_URL);
-  // ceramic.did = did;
-  // const doc = await TileDocument.create(
-  //   ceramic,
-  //   null,
-  //   { deterministic: true },
-  //   { anchor: false, publish: false }
-  // );
+  const ceramic = new CeramicClient(API_URL);
+  ceramic.did = did;
+  const doc = await TileDocument.create(
+    ceramic,
+    null,
+    { deterministic: true },
+    { anchor: false, publish: false }
+  );
 
-  // const cp = $.conjurationPrompt;
-  // const ep = $.essencePrompt;
-  // const dp = $.dreamPrompt;
-  // const c = $.conjurations;
-  // const e = $.essence;
-  // const d = $.dreams;
+  const cp = $.conjurationPrompt;
+  const ep = $.essencePrompt;
+  const dp = $.dreamPrompt;
+  const c = $.conjurations;
+  const e = $.essence;
+  const d = $.dreams;
 
-  // const jwe = await did.createDagJWE(
-  //   {
-  //     cp,
-  //     ep,
-  //     dp,
-  //     c,
-  //     e,
-  //     d,
-  //   },
-  //   [did.id]
-  // );
-  // console.log(JSON.stringify(jwe));
-  // await doc.update(jwe);
+  const jwe = await did.createDagJWE(
+    {
+      cp,
+      ep,
+      dp,
+      c,
+      e,
+      d,
+    },
+    [did.id]
+  );
+  console.log(JSON.stringify(jwe));
+  await doc.update(jwe);
 
   // The commented-out code below is for implementing a transition effect at the end when developing so there isn't an api call every time I want to test
   // (comment out the api interaction when testing)
   // {
-  const transition = new Promise((resolve) => {
-    setTimeout(() => {
-      console.log("transitioning");
-      resolve("transitioning");
-    }, 10500);
-  });
+  // const transition = new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     console.log("transitioning");
+  //     resolve("transitioning");
+  //   }, 10500);
+  // });
 
-  await transition;
+  // await transition;
   // }
   encryptionMessage__cmpt.encryptionComplete();
 }
@@ -145,8 +145,7 @@ async function openCircle() {
 
 //   const ceramic = new CeramicClient(API_URL);
 //   ceramic.did = did;
-//   // const streamid = await prompt('Enter streamid:\n')
-//   // const doc = await TileDocument.load(ceramic, streamid)
+
 //   const doc = await TileDocument.create(
 //     ceramic,
 //     null,
