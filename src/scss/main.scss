@@ -42,6 +42,14 @@
   --open-circle: #fbe995;
   --flame-color: #1942f9;
   --teardrop-ds: #5869b5;
+  --bg-mask-primary: linear-gradient(
+    to right,
+    #0a0036,
+    #171352,
+    #2a2071,
+    #3e2e90,
+    #543cb1
+  );
 }
 
 *,
@@ -86,6 +94,12 @@ $ripple-bg: #08081a;
   }
 }
 
+@keyframes shiftBG {
+  100% {
+    background-position: top right;
+  }
+}
+
 // GLOBAL STYLES
 
 img {
@@ -97,6 +111,7 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
+  // grid-template-columns: 10% 80% 10%;
 }
 
 h2 {
@@ -107,25 +122,53 @@ button {
   outline-color: transparent;
 }
 
-.ripple {
-  opacity: 0;
-  min-height: 700px;
+.background-mask {
+  min-height: 100vh;
   width: 100%;
-  border-radius: 50%;
-  animation: ripple 1.5s linear infinite;
-  filter: blur(4px);
-  background-color: $ripple-bg;
+  background-image: var(--bg-mask-primary);
   position: absolute;
   z-index: -1;
   transition: opacity 2.2s;
+  background-size: 300%;
+  background-position: top left;
+  animation: shiftBG 2.5s infinite alternate;
+  --mask: radial-gradient(
+        14.76px at calc(100% + 5.85px) 50%,
+        #0000 calc(99% - 1px),
+        #000 calc(101% - 1px) 99%,
+        #0000 101%
+      )
+      calc(50% - 7px + 0.5px) calc(50% - 26px) / 14px 52px,
+    radial-gradient(
+        14.76px at -5.85px 50%,
+        #0000 calc(99% - 1px),
+        #000 calc(101% - 1px) 99%,
+        #0000 101%
+      )
+      calc(50% + 7px) 50%/14px 52px;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
 }
+
+// .ripple {
+//   opacity: 0;
+//   min-height: 700px;
+//   width: 100%;
+//   border-radius: 50%;
+//   animation: ripple 1.5s linear infinite;
+//   filter: blur(4px);
+//   background-color: $ripple-bg;
+//   position: absolute;
+//   z-index: -1;
+//   transition: opacity 2.2s;
+// }
 
 .ceremonyContainer {
   // border: solid 1px lightblue;
-  min-height: 700px;
+  backdrop-filter: blur(1.9px);
+  min-height: 100vh;
   position: relative;
   width: 100%;
-  max-width: 700px;
   display: grid;
   place-items: center;
 }
