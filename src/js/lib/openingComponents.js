@@ -1,6 +1,6 @@
 "use strict";
 
-import $ from "./stores.js";
+import $ from "../stores.js";
 
 // DOM
 const welcome = document.querySelector(".welcome");
@@ -30,7 +30,7 @@ class chooseCeremony extends HTMLElement {
       
       .selection-options {
         opacity: 0;
-        animation: fadeIn 0.4s ease-in forwards;
+        animation: fadeIn 0.2s 0.6s ease-in forwards;
         gap: 0rem;
         margin-top: 2rem;
         align-items: flex-end;
@@ -97,7 +97,7 @@ class chooseCeremony extends HTMLElement {
       
       .btn {
         opacity: 0;
-        animation: fadeIn 0.4s 1.8s ease-in forwards;
+        animation: fadeIn 0.4s 2.2s ease-in forwards;
         color: #fff;
         font: inherit;
         text-align: center;
@@ -128,7 +128,7 @@ class chooseCeremony extends HTMLElement {
       
       .teardrop {
         opacity: 0;
-        animation: fadeIn 0.4s 1.2s ease-in forwards;
+        animation: fadeIn 0.4s 1.8s ease-in forwards;
         position: relative;
         margin: 0 auto;
         min-height: 2rem;
@@ -443,29 +443,23 @@ class getConjurations extends HTMLElement {
 
         .input {
           opacity: 0;
-          animation: fadeIn 0.4s 1.8s ease-in forwards;
+          animation: fadeIn 0.4s 2s ease-in forwards;
           color: #fff;
-          border-radius: 20px;
-          padding: 0.5em;
+          border-radius: 100px;
+          padding: 0.9em 0.9em 0 0.9em;
           font-size: 1.4rem;
           width: 85%;
           outline: none;
-          text-align: left;
-          border: solid 1px #ffffff24;
-          min-height: 8rem;
-          resize: none;
-        }
-
-        .input::placeholder {
-          color: #f0f0f0;
-          animation: fadeIn 1s ease-in forwards;
           text-align: center;
-          font-size: 1.53rem;
+          border-right: solid 1px #fbe9954d;
+          border-left: solid 1px #fbe9954d;
+          min-height: 6rem;
+          resize: none;
         }
 
         .submit {
           opacity: 0;
-          animation: fadeIn 0.4s 2.3s ease-in forwards;
+          animation: fadeIn 0.4s 2.7s ease-in forwards;
           font-size: 2.7rem;
           outline-color: transparent;
           color: #fff;
@@ -505,7 +499,7 @@ class getConjurations extends HTMLElement {
           opacity: 0;
           text-align: center;
           margin-top: 4.5rem;
-          animation: fadeIn 0.4s 1.5s ease-in forwards;
+          animation: fadeIn 0.4s 1.8s ease-in forwards;
         }
 
         .participant-label {
@@ -523,7 +517,7 @@ class getConjurations extends HTMLElement {
 
         .flame-outermost {
           opacity: 0;
-          animation: fadeIn 0.4s ease-in forwards;
+          animation: fadeIn 0.2s 0.6s ease-in forwards;
           gap: 0rem;
           margin-top: 4rem;
           margin-bottom: 4rem;
@@ -634,7 +628,7 @@ class getConjurations extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(getConjurations__temp.content.cloneNode(true));
 
-    const input = shadow.querySelector(".input");
+    this.input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
     const participantLabel = shadow.querySelector(".participant-label");
     participantLabel.innerText = `Participant ${ptNum + 1}`;
@@ -646,23 +640,21 @@ class getConjurations extends HTMLElement {
 
     this.push_inputs = function () {
       if (!acquiredDreams) {
-        $.dreams = [...$.dreams, input.value];
+        $.dreams = [...$.dreams, this.input.value];
         acquiredDreams = true;
-        input.setAttribute("placeholder", "");
-        input.value = "";
+        this.input.value = "";
         queryText.innerText = $.conjurationPrompt;
-        input.focus();
+        this.input.focus();
       } else if (!acquiredConjurations) {
-        $.conjurations = [...$.conjurations, input.value];
+        $.conjurations = [...$.conjurations, this.input.value];
         acquiredConjurations = true;
-        input.setAttribute("placeholder", "");
-        input.value = "";
+        this.input.value = "";
         queryText.innerText = $.essencePrompt;
-        input.focus();
+        this.input.focus();
       } else if (acquiredDreams && acquiredConjurations) {
-        $.essence = [...$.essence, input.value];
+        $.essence = [...$.essence, this.input.value];
         acquiredEssence = true;
-        input.value = "";
+        this.input.value = "";
       }
       return true;
     };

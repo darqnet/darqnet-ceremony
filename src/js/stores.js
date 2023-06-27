@@ -1,6 +1,6 @@
 "use strict";
 
-import CP from "./components.js";
+import CP from "./lib/openingComponents.js";
 import { choose_cer__cmpt } from "../app.js";
 
 // Shared State

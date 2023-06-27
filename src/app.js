@@ -7,15 +7,16 @@ import { Ed25519Provider } from "key-did-provider-ed25519";
 import KeyResolver from "key-did-resolver";
 import * as seedsplit from "./js/seedsplit.js";
 import * as Bip39 from "bip39";
-import CP from "./js/components.js";
+import OC from "./js/lib/openingComponents.js";
+import CC from "./js/lib/closingComponents.js";
 import $ from "./js/stores.js";
 
 const API_URL = "https://ceramic-clay.3boxlabs.com";
 
 // Register Components
-CP.declareComponents();
-export const choose_cer__cmpt = new CP.chooseCeremony();
-const get_participants__cmpt = new CP.getParticipants();
+OC.declareComponents();
+export const choose_cer__cmpt = new OC.chooseCeremony();
+const get_participants__cmpt = new OC.getParticipants();
 let encryptionMessage__cmpt;
 
 // Start Ceremony
@@ -54,8 +55,11 @@ async function openCircle() {
   const shards = await seedsplit.split(mnemonic, $.participants, $.threshold);
 
   for (let i = 0; i < $.participants; i++) {
-    const userInput = new CP.getConjurations(i);
-    $.replaceComponent(CP.ceremonyContainer.childNodes[1], userInput);
+    const userInput = new OC.getConjurations(i);
+    $.replaceComponent(OC.ceremonyContainer.childNodes[1], userInput);
+    setTimeout(() => {
+      userInput.input.focus();
+    }, 3600);
     await userInput.acquire_entries;
     console.log("%cState:", "color: #fe84fe; font-weight: bold;");
     console.log(
@@ -67,14 +71,14 @@ async function openCircle() {
       $.essence
     );
     console.log(`Participant ${i + 1}:\n${shards[i]}`);
-    const seedphraseDisplay = new CP.seedphraseDisplay(shards[i]);
-    $.replaceComponent(CP.ceremonyContainer.childNodes[1], seedphraseDisplay);
+    const seedphraseDisplay = new OC.seedphraseDisplay(shards[i]);
+    $.replaceComponent(OC.ceremonyContainer.childNodes[1], seedphraseDisplay);
     await seedphraseDisplay.acceptPhrase;
   }
 
-  encryptionMessage__cmpt = new CP.encryptionMessage();
+  encryptionMessage__cmpt = new OC.encryptionMessage();
   $.replaceComponent(
-    CP.ceremonyContainer.childNodes[1],
+    OC.ceremonyContainer.childNodes[1],
     encryptionMessage__cmpt
   );
 
