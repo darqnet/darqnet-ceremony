@@ -284,6 +284,7 @@ class getParticipants extends HTMLElement {
         outline: none;
         text-align: center;
         border-bottom: solid 1px var(--flame-color);
+        transition: border-color 0.4s;
       }
 
       .input::placeholder {
@@ -321,6 +322,7 @@ class getParticipants extends HTMLElement {
       }
 
       .query__container {
+        margin: 0 auto;
         max-width: 600px;
         width: 100%;
       }
@@ -402,7 +404,10 @@ class getParticipants extends HTMLElement {
             this.input.focus();
           }
         } else if (!gotThresh) {
-          if (!isNaN(parseInt(this.input.value))) {
+          if (
+            !isNaN(parseInt(this.input.value)) &&
+            parseInt(this.input.value) <= $.participants
+          ) {
             $.threshold = parseInt(this.input.value);
             gotThresh = true;
             this.input.value = "";
@@ -410,6 +415,14 @@ class getParticipants extends HTMLElement {
           }
         }
       });
+    });
+
+    this.input.addEventListener("keyup", () => {
+      if (gotPar && parseInt(this.input.value) > $.participants)
+        this.input.style.borderColor = "red";
+      else {
+        this.input.style.borderColor = "var(--flame-color)";
+      }
     });
   }
 }
@@ -420,12 +433,6 @@ class getConjurations extends HTMLElement {
     const getConjurations__temp = document.createElement("template");
     getConjurations__temp.innerHTML = `
       <style>
-        @keyframes fadeIn {
-          100% {
-            opacity: 1;
-          }
-        }
-    
         textarea,
         button {
           background: transparent;
@@ -433,8 +440,10 @@ class getConjurations extends HTMLElement {
           transition: 0.4s all;
           border: transparent;
         }
-    
+
         .input {
+          opacity: 0;
+          animation: fadeIn 0.4s 1.8s ease-in forwards;
           color: #fff;
           border-radius: 20px;
           padding: 0.5em;
@@ -443,63 +452,182 @@ class getConjurations extends HTMLElement {
           outline: none;
           text-align: left;
           border: solid 1px #ffffff24;
-          min-height: 4rem;
+          min-height: 8rem;
           resize: none;
         }
-    
+
         .input::placeholder {
           color: #f0f0f0;
           animation: fadeIn 1s ease-in forwards;
           text-align: center;
           font-size: 1.53rem;
         }
-    
+
         .submit {
           opacity: 0;
-          animation: fadeIn 0.5s 1.3s ease-in forwards;
-          font-size: 1.5rem;
+          animation: fadeIn 0.4s 2.3s ease-in forwards;
+          font-size: 2.7rem;
           outline-color: transparent;
-          color: #808080;
+          color: #fff;
+          filter: drop-shadow(0 0 0.1em var(--flame-color));
           border-radius: 50%;
           width: min-content;
         }
-    
-        .submit:hover {
+
+        .submit:hover,
+        .submit:focus {
           cursor: pointer;
-          color: #fff;
+          color: #9d9d9d;
+          outline: transparent;
         }
-    
+
         .input__container {
           display: flex;
           align-items: center;
           flex-direction: column;
-          justify-content: space-evenly;
           width: 100%;
-          max-width: 600px;
+          min-height: 700px;
           margin: 0 auto;
+          border-radius: 50%;
         }
 
         .input__area {
-          width: 95%;
+          width: 50%;
+          max-width: 700px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          gap: 2rem;
+          gap: 0.5rem;
         }
 
-        p {
-          font-size: 1.5rem;
+        .heading__container {
+          opacity: 0;
           text-align: center;
+          margin-top: 4.5rem;
+          animation: fadeIn 0.4s 1.5s ease-in forwards;
+        }
+
+        .participant-label {
+          font-size: 1.8rem;
+          color: var(--open-circle);
+          filter: drop-shadow(0 0 0.2em var(--open-circle));
+        }
+
+        .queryText {
+          font-size: 1.65rem;
+          text-align: center;
+          filter: drop-shadow(0 0 0.1em var(--flame-color));
+          transition: 1s all;
+        }
+
+        .flame-outermost {
+          opacity: 0;
+          animation: fadeIn 0.4s ease-in forwards;
+          gap: 0rem;
+          margin-top: 4rem;
+          margin-bottom: 4rem;
+          align-items: flex-end;
+          justify-content: space-evenly;
+        }
+
+        .flame-container,
+        .flame {
+          min-height: 1.5rem;
+          max-width: 1.5rem;
+          width: 100%;
+        }
+
+        .flame-container {
+          position: absolute;
+          filter: blur(0.07rem);
+          display: inline;
+        }
+
+        .flame-circle {
+          position: relative;
+          min-height: 6.5rem;
+          width: 6.5rem;
+          border-radius: 50%;
+          animation: rotate 3.3s linear infinite;
+        }
+
+        .flame {
+          border-radius: 56% 44% 88% 12% / 100% 0% 100% 0%;
+          transform: rotate(-40deg);
+          animation: dissolve 1.5s 0.1s ease-in-out infinite alternate;
+          transition: 0.5s all;
+          background: var(--open-circle);
+          filter: drop-shadow(0 0 0.8em var(--open-circle));
+        }
+
+        .flame-1 {
+          top: -0.6rem;
+          right: 2.4rem;
+          rotate: 90deg;
+        }
+
+        .flame-2 {
+          bottom: 0.8rem;
+          left: -0.3rem;
+          rotate: -30deg;
+        }
+
+        .flame-3 {
+          bottom: 0.6rem;
+          right: -0.2rem;
+          rotate: 210deg;
+        }
+
+        @keyframes rotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          20% {
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes dissolve {
+          100% {
+            rotate: 240deg;
+            min-height: 0.1rem;
+          }
+        }
+
+        @keyframes fadeIn {
+          100% {
+            opacity: 1;
+          }
         }
 
       </style>
 
       <div class="input__container">
-        <p class="participant-label"></p>
+        <div class="heading__container">
+          <p class="participant-label">Participant N</p>
+          <p class="queryText">What is your biggest dream for the new year?</p>
+        </div>
+
+        <div class="flame-outermost">
+          <div class="flame-circle">
+            <div class="flame-container flame-1">
+              <div class="flame"></div>
+            </div>
+            <div class="flame-container flame-2">
+              <div class="flame"></div>
+            </div>
+            <div class="flame-container flame-3">
+              <div class="flame"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="input__area">
           <textarea type="text" class="input"></textarea>
-          <button class="submit">&#10140;</button>
+          <button class="submit">⤗</button>
         </div>
       </div>
     `;
@@ -510,20 +638,7 @@ class getConjurations extends HTMLElement {
     const submitBTN = shadow.querySelector(".submit");
     const participantLabel = shadow.querySelector(".participant-label");
     participantLabel.innerText = `Participant ${ptNum + 1}`;
-
-    this.setPlaceholder = function (text) {
-      let count = 1;
-      const loadText = setInterval(() => {
-        if (count <= text.length) {
-          let text_segment = text.slice(0, count);
-          input.setAttribute("placeholder", text_segment);
-          count++;
-        } else {
-          input.focus();
-          clearInterval(loadText);
-        }
-      }, 40);
-    };
+    const queryText = shadow.querySelector(".queryText");
 
     let acquiredDreams = false;
     let acquiredConjurations = false;
@@ -535,16 +650,19 @@ class getConjurations extends HTMLElement {
         acquiredDreams = true;
         input.setAttribute("placeholder", "");
         input.value = "";
-        this.setPlaceholder(" What will you conjure by the summer solstice?");
+        queryText.innerText = $.conjurationPrompt;
+        input.focus();
       } else if (!acquiredConjurations) {
         $.conjurations = [...$.conjurations, input.value];
         acquiredConjurations = true;
         input.setAttribute("placeholder", "");
         input.value = "";
-        this.setPlaceholder(" Feel into the moment and capture its essence!");
+        queryText.innerText = $.essencePrompt;
+        input.focus();
       } else if (acquiredDreams && acquiredConjurations) {
         $.essence = [...$.essence, input.value];
         acquiredEssence = true;
+        input.value = "";
       }
       return true;
     };
@@ -754,7 +872,7 @@ class encryptionMessage extends HTMLElement {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          filter: blur(0.07rem);
+          filter: blur(0.055rem);
           border-bottom: solid 1px var(--flame-color);
           border-radius: 50%;
         }
@@ -770,7 +888,7 @@ class encryptionMessage extends HTMLElement {
           border: solid 2px var(--dark-gradient);
           animation: shiftGradient 1.2s infinite ease-in-out alternate;
           border-radius: 50%;
-          transform: translateY(2.5rem);
+          transform: translateY(2.3rem);
           transition: 0.5s all;
         }
         
@@ -846,13 +964,12 @@ class encryptionMessage extends HTMLElement {
 
     this.encryptionComplete = function () {
       setTimeout(() => {
-        console.log("fading back in msg");
         this.msg_content.style.opacity = 1;
         this.msg_content.innerText = "Ceremony Complete.";
-      }, 10500);
+      }, 12500);
       setTimeout(() => {
         this.msg_content.style.opacity = 0;
-      }, 14000);
+      }, 15000);
     };
 
     const orb = shadow.querySelector(".orb");

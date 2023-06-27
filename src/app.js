@@ -56,9 +56,6 @@ async function openCircle() {
   for (let i = 0; i < $.participants; i++) {
     const userInput = new CP.getConjurations(i);
     $.replaceComponent(CP.ceremonyContainer.childNodes[1], userInput);
-    setTimeout(() => {
-      userInput.setPlaceholder(" What is your biggest dream for the new year?");
-    }, 1000);
     await userInput.acquire_entries;
     console.log("%cState:", "color: #fe84fe; font-weight: bold;");
     console.log(
@@ -81,35 +78,35 @@ async function openCircle() {
     encryptionMessage__cmpt
   );
 
-  const ceramic = new CeramicClient(API_URL);
-  ceramic.did = did;
-  const doc = await TileDocument.create(
-    ceramic,
-    null,
-    { deterministic: true },
-    { anchor: false, publish: false }
-  );
+  // const ceramic = new CeramicClient(API_URL);
+  // ceramic.did = did;
+  // const doc = await TileDocument.create(
+  //   ceramic,
+  //   null,
+  //   { deterministic: true },
+  //   { anchor: false, publish: false }
+  // );
 
-  const cp = $.conjurationPrompt;
-  const ep = $.essencePrompt;
-  const dp = $.dreamPrompt;
-  const c = $.conjurations;
-  const e = $.essence;
-  const d = $.dreams;
+  // const cp = $.conjurationPrompt;
+  // const ep = $.essencePrompt;
+  // const dp = $.dreamPrompt;
+  // const c = $.conjurations;
+  // const e = $.essence;
+  // const d = $.dreams;
 
-  const jwe = await did.createDagJWE(
-    {
-      cp,
-      ep,
-      dp,
-      c,
-      e,
-      d,
-    },
-    [did.id]
-  );
-  console.log(JSON.stringify(jwe));
-  await doc.update(jwe);
+  // const jwe = await did.createDagJWE(
+  //   {
+  //     cp,
+  //     ep,
+  //     dp,
+  //     c,
+  //     e,
+  //     d,
+  //   },
+  //   [did.id]
+  // );
+  // console.log(JSON.stringify(jwe));
+  // await doc.update(jwe);
 
   // The commented-out code below is for implementing a transition effect at the end when developing so there isn't an api call every time I want to test
   // (comment out the api interaction when testing)
@@ -157,12 +154,13 @@ async function openCircle() {
 
 //   const cleartext = await did.decryptDagJWE(jwe);
 //   console.clear();
-//   console.log(cleartext.a);
-//   printAnswers(cleartext.A);
-//   console.log(cleartext.b);
-//   printAnswers(cleartext.B);
-//   console.log(cleartext.c);
-//   printAnswers(cleartext.C);
+// console.log("cleartext:", cleartext);
+// console.log(cleartext.dp);
+// printAnswers(cleartext.d);
+// console.log(cleartext.cp);
+// printAnswers(cleartext.c);
+// console.log(cleartext.ep);
+// printAnswers(cleartext.e);
 // }
 
 // function printAnswers(answers) {

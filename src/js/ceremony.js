@@ -8,7 +8,7 @@ import KeyResolver from "key-did-resolver";
 import * as seedsplit from "./seedsplit.js";
 import bip39 from "bip39";
 
-const API_URL = "https://ceramic-private.3boxlabs.com";
+const API_URL = "https://ceramic-clay.3boxlabs.com";
 
 async function openCircle() {
   const mnemonic = bip39.generateMnemonic();
@@ -105,12 +105,13 @@ async function closeCircle() {
 
   const cleartext = await did.decryptDagJWE(jwe);
   console.clear();
-  console.log(cleartext.a);
-  printAnswers(cleartext.A);
-  console.log(cleartext.b);
-  printAnswers(cleartext.B);
-  console.log(cleartext.c);
-  printAnswers(cleartext.C);
+  console.log("cleartext:", cleartext);
+  console.log(cleartext.dp);
+  printAnswers(cleartext.d);
+  console.log(cleartext.cp);
+  printAnswers(cleartext.c);
+  console.log(cleartext.ep);
+  printAnswers(cleartext.e);
 }
 
 function printAnswers(answers) {

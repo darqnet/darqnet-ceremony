@@ -15,9 +15,6 @@ const essence = [];
 // *
 // Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve) => {
-  // setTimeout(() => {
-  //   CP.ripple.style.opacity = "1";
-  // }, 3000);
   setTimeout(() => {
     CP.welcome.replaceWith(choose_cer__cmpt);
     resolve(true);
