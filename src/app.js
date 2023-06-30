@@ -15,8 +15,10 @@ const API_URL = "https://ceramic-clay.3boxlabs.com";
 
 // Register Components
 OC.declareComponents();
+CC.declareComponents();
 export const choose_cer__cmpt = new OC.chooseCeremony();
 const get_participants__cmpt = new OC.getParticipants();
+const GetThreshold = new CC.GetThreshold();
 let encryptionMessage__cmpt;
 
 // Start Ceremony
@@ -35,8 +37,12 @@ async function startCeremony() {
     }, 1000);
     await openCircle();
   } else if (ceremonyType === "close") {
-    console.log("closing.");
-    // await closeCircle();
+    console.log("closing ceremony.");
+    $.replaceComponent(choose_cer__html, GetThreshold);
+    setTimeout(() => {
+      GetThreshold.input.focus();
+    }, 1000);
+    await closeCircle();
   }
   // console.log("Ceremonial sequence end");
 }
@@ -125,6 +131,18 @@ async function openCircle() {
   // await transition;
   // }
   encryptionMessage__cmpt.encryptionComplete();
+}
+
+async function closeCircle() {
+  await GetThreshold.acquiredThreshold;
+  console.log("threshold:", $.thresholdClose);
+
+  // replace component
+  // the code below should be in the seedphrase collection component itself
+
+  // for (let i = 0; i < $.thresholdClose; i++) {
+  //   shards.push(/* await seedphrase from component promise */);
+  // }
 }
 
 // async function closeCircle() {

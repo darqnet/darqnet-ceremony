@@ -6,9 +6,11 @@ import { choose_cer__cmpt } from "../app.js";
 // Shared State
 let participants;
 let threshold;
+let thresholdClose;
 const dreams = [];
 const conjurations = [];
 const essence = [];
+const shards = [];
 
 // Helper functions for app.js
 // *
@@ -38,9 +40,11 @@ const essencePrompt = "Feel into the moment and capture its essence!";
 export default {
   participants,
   threshold,
+  thresholdClose,
   dreams,
   conjurations,
   essence,
+  shards,
   loadWelcome,
   replaceComponent,
   dreamPrompt,
