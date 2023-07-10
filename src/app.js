@@ -136,13 +136,48 @@ async function openCircle() {
 async function closeCircle() {
   await GetThreshold.acquiredThreshold;
   console.log("threshold:", $.thresholdClose);
+  const GetShards = new CC.GetShards();
+  $.replaceComponent(GetThreshold, GetShards);
+  setTimeout(() => {
+    GetShards.input.focus();
+  }, 1000);
+  await GetShards.collectShards;
+  console.log($.shards);
 
-  // replace component
-  // the code below should be in the seedphrase collection component itself
+  // Decryption + API call
+  const mnemonic = await seedsplit.combine($.shards);
+  const seed = new Uint8Array(Bip39.mnemonicToSeedSync(mnemonic).slice(0, 32));
+  const provider = new Ed25519Provider(seed);
+  const did = new DID({ provider, resolver: KeyResolver.getResolver() });
+  await did.authenticate();
+  console.log("did", did.id);
+  const ceramic = new CeramicClient(API_URL);
+  ceramic.did = did;
+  const doc = await TileDocument.create(
+    ceramic,
+    null,
+    { deterministic: true },
+    { anchor: false, publish: false }
+  );
+  console.log(doc.content);
+  const jwe = doc.content;
 
-  // for (let i = 0; i < $.thresholdClose; i++) {
-  //   shards.push(/* await seedphrase from component promise */);
-  // }
+  const cleartext = await did.decryptDagJWE(jwe);
+  // console.log("cleartext:", cleartext);
+  console.log(cleartext.dp);
+  printAnswers(cleartext.d);
+  console.log(cleartext.cp);
+  printAnswers(cleartext.c);
+  console.log(cleartext.ep);
+  printAnswers(cleartext.e);
+
+  $.replaceComponent(GetShards, new CC.RevealIntentions());
+}
+
+function printAnswers(answers) {
+  for (const answer of answers) {
+    console.log(`\n${answer}\n`);
+  }
 }
 
 // async function closeCircle() {

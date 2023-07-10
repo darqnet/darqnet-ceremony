@@ -42,6 +42,7 @@
   --open-circle: #fbe995;
   --flame-color: #1942f9;
   --teardrop-ds: #5869b5;
+  --success: #04eca3;
   --bg-mask-primary: linear-gradient(
     to right,
     #0a0036,
@@ -232,7 +233,9 @@ button {
 }
 
 conjuration-input,
-encryption-message {
+encryption-message,
+shard-input,
+reveal-intentions {
   width: 100%;
 }
 
