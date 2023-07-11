@@ -10,11 +10,11 @@ const ceremonyContainer = document.querySelector(".ceremonyContainer");
 // COMPONENTS
 
 // || CHOOSE CEREMONY ||
-class chooseCeremony extends HTMLElement {
+class ChooseCeremony extends HTMLElement {
   constructor() {
     super();
-    const chooseCeremony__temp = document.createElement("template");
-    chooseCeremony__temp.innerHTML = `
+    const CC = document.createElement("template");
+    CC.innerHTML = `
     <style>
       .container {
         margin: 0 auto;
@@ -201,7 +201,7 @@ class chooseCeremony extends HTMLElement {
     </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
-    shadow.append(chooseCeremony__temp.content.cloneNode(true));
+    shadow.append(CC.content.cloneNode(true));
 
     const flames = Array.from(shadow.querySelectorAll(".flame"));
     const teardrop = shadow.querySelector(".teardrop");
@@ -255,11 +255,11 @@ class chooseCeremony extends HTMLElement {
 }
 
 // || PARTICIPANT INPUT ||
-class getParticipants extends HTMLElement {
+class GetParticipants extends HTMLElement {
   constructor() {
     super();
-    const getParticipants__temp = document.createElement("template");
-    getParticipants__temp.innerHTML = `
+    const GP = document.createElement("template");
+    GP.innerHTML = `
     <style>
       @keyframes fadeIn {
         100% {
@@ -384,7 +384,7 @@ class getParticipants extends HTMLElement {
     </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
-    shadow.append(getParticipants__temp.content.cloneNode(true));
+    shadow.append(GP.content.cloneNode(true));
 
     this.input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
@@ -427,11 +427,11 @@ class getParticipants extends HTMLElement {
   }
 }
 
-class getConjurations extends HTMLElement {
+class GetConjurations extends HTMLElement {
   constructor(ptNum) {
     super();
-    const getConjurations__temp = document.createElement("template");
-    getConjurations__temp.innerHTML = `
+    const GC = document.createElement("template");
+    GC.innerHTML = `
       <style>
         textarea,
         button {
@@ -626,7 +626,7 @@ class getConjurations extends HTMLElement {
       </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
-    shadow.append(getConjurations__temp.content.cloneNode(true));
+    shadow.append(GC.content.cloneNode(true));
 
     this.input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
@@ -669,11 +669,11 @@ class getConjurations extends HTMLElement {
 }
 
 // || SEED PHRASE DISPLAY ||
-class seedphraseDisplay extends HTMLElement {
+class SeedphraseDisplay extends HTMLElement {
   constructor(seedphraseText) {
     super();
-    const seedphraseDisplay__temp = document.createElement("template");
-    seedphraseDisplay__temp.innerHTML = `
+    const SD = document.createElement("template");
+    SD.innerHTML = `
       <style>
         @keyframes fadeIn {
           100% {
@@ -775,7 +775,7 @@ class seedphraseDisplay extends HTMLElement {
       </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
-    shadow.append(seedphraseDisplay__temp.content.cloneNode(true));
+    shadow.append(SD.content.cloneNode(true));
 
     const seedphraseContent = shadow.querySelector(".seedphrase__content");
     const acceptBTN = shadow.querySelector(".seedphrase__acceptBTN");
@@ -791,11 +791,11 @@ class seedphraseDisplay extends HTMLElement {
 }
 
 // || ENCRYPTION MESSAGE ||
-class encryptionMessage extends HTMLElement {
+class EncryptionMessage extends HTMLElement {
   constructor() {
     super();
-    const encryptionMessage__temp = document.createElement("template");
-    encryptionMessage__temp.innerHTML = `
+    const EM = document.createElement("template");
+    EM.innerHTML = `
       <style>
         .container {
           max-width: 18rem;
@@ -835,7 +835,6 @@ class encryptionMessage extends HTMLElement {
           min-height: 1.8rem;
           max-width: 1.8rem;
           width: 100%;
-          /* #f1b162 */
           background-color: #fbe995;
           filter: drop-shadow(0 0 0.3em #ffe366);
           border-radius: 56% 44% 88% 12% / 100% 0% 100% 0%;
@@ -949,16 +948,15 @@ class encryptionMessage extends HTMLElement {
       </div>
       <p class="encryptionMessage__content">Encrypting Intentions</p>
     `;
-
     const shadow = this.attachShadow({ mode: "open" });
-    shadow.append(encryptionMessage__temp.content.cloneNode(true));
+    shadow.append(EM.content.cloneNode(true));
     this.msg_content = shadow.querySelector(".encryptionMessage__content");
 
     this.encryptionComplete = function () {
       setTimeout(() => {
         this.msg_content.style.opacity = 1;
         this.msg_content.innerText = "Ceremony Complete.";
-      }, 12500);
+      }, 10000);
       setTimeout(() => {
         this.msg_content.style.opacity = 0;
       }, 15000);
@@ -983,11 +981,11 @@ class encryptionMessage extends HTMLElement {
 }
 
 function declareComponents() {
-  customElements.define("choose-ceremony", chooseCeremony);
-  customElements.define("participant-input", getParticipants);
-  customElements.define("conjuration-input", getConjurations);
-  customElements.define("seedphrase-display", seedphraseDisplay);
-  customElements.define("encryption-message", encryptionMessage);
+  customElements.define("choose-ceremony", ChooseCeremony);
+  customElements.define("participant-input", GetParticipants);
+  customElements.define("conjuration-input", GetConjurations);
+  customElements.define("seedphrase-display", SeedphraseDisplay);
+  customElements.define("encryption-message", EncryptionMessage);
 }
 
 // this is only for testing, remove once component is implemented into ceremony_ui.js
@@ -997,10 +995,10 @@ export default {
   welcome,
   ripple,
   ceremonyContainer,
-  chooseCeremony,
-  getParticipants,
-  getConjurations,
-  seedphraseDisplay,
-  encryptionMessage,
+  ChooseCeremony,
+  GetParticipants,
+  GetConjurations,
+  SeedphraseDisplay,
+  EncryptionMessage,
   declareComponents,
 };

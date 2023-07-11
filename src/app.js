@@ -16,29 +16,29 @@ const API_URL = "https://ceramic-clay.3boxlabs.com";
 // Register Components
 OC.declareComponents();
 CC.declareComponents();
-export const choose_cer__cmpt = new OC.chooseCeremony();
-const get_participants__cmpt = new OC.getParticipants();
+export const choose_cer__cmpt = new OC.ChooseCeremony();
+const get_participants__cmpt = new OC.GetParticipants();
 const GetThreshold = new CC.GetThreshold();
-let encryptionMessage__cmpt;
+let encryptionMessage;
 
 // Start Ceremony
 async function startCeremony() {
-  let choose_cer__html;
+  let chooseCeremony;
   const loaded = await $.loadWelcome;
   if (loaded) {
-    choose_cer__html = document.querySelector("choose-ceremony");
+    chooseCeremony = document.querySelector("choose-ceremony");
   }
   const ceremonyType = await choose_cer__cmpt.selection;
   if (ceremonyType === "open") {
     console.log("opening ceremony.");
-    $.replaceComponent(choose_cer__html, get_participants__cmpt);
+    $.replaceComponent(chooseCeremony, get_participants__cmpt);
     setTimeout(() => {
       get_participants__cmpt.input.focus();
     }, 1000);
     await openCircle();
   } else if (ceremonyType === "close") {
     console.log("closing ceremony.");
-    $.replaceComponent(choose_cer__html, GetThreshold);
+    $.replaceComponent(chooseCeremony, GetThreshold);
     setTimeout(() => {
       GetThreshold.input.focus();
     }, 1000);
@@ -61,7 +61,7 @@ async function openCircle() {
   const shards = await seedsplit.split(mnemonic, $.participants, $.threshold);
 
   for (let i = 0; i < $.participants; i++) {
-    const userInput = new OC.getConjurations(i);
+    const userInput = new OC.GetConjurations(i);
     $.replaceComponent(OC.ceremonyContainer.childNodes[1], userInput);
     setTimeout(() => {
       userInput.input.focus();
@@ -77,46 +77,43 @@ async function openCircle() {
       $.essence
     );
     console.log(`Participant ${i + 1}:\n${shards[i]}`);
-    const seedphraseDisplay = new OC.seedphraseDisplay(shards[i]);
+    const seedphraseDisplay = new OC.SeedphraseDisplay(shards[i]);
     $.replaceComponent(OC.ceremonyContainer.childNodes[1], seedphraseDisplay);
     await seedphraseDisplay.acceptPhrase;
   }
 
-  encryptionMessage__cmpt = new OC.encryptionMessage();
-  $.replaceComponent(
-    OC.ceremonyContainer.childNodes[1],
-    encryptionMessage__cmpt
+  encryptionMessage = new OC.EncryptionMessage();
+  $.replaceComponent(OC.ceremonyContainer.childNodes[1], encryptionMessage);
+
+  const ceramic = new CeramicClient(API_URL);
+  ceramic.did = did;
+  const doc = await TileDocument.create(
+    ceramic,
+    null,
+    { deterministic: true },
+    { anchor: false, publish: false }
   );
 
-  // const ceramic = new CeramicClient(API_URL);
-  // ceramic.did = did;
-  // const doc = await TileDocument.create(
-  //   ceramic,
-  //   null,
-  //   { deterministic: true },
-  //   { anchor: false, publish: false }
-  // );
+  const cp = $.conjurationPrompt;
+  const ep = $.essencePrompt;
+  const dp = $.dreamPrompt;
+  const c = $.conjurations;
+  const e = $.essence;
+  const d = $.dreams;
 
-  // const cp = $.conjurationPrompt;
-  // const ep = $.essencePrompt;
-  // const dp = $.dreamPrompt;
-  // const c = $.conjurations;
-  // const e = $.essence;
-  // const d = $.dreams;
-
-  // const jwe = await did.createDagJWE(
-  //   {
-  //     cp,
-  //     ep,
-  //     dp,
-  //     c,
-  //     e,
-  //     d,
-  //   },
-  //   [did.id]
-  // );
-  // console.log(JSON.stringify(jwe));
-  // await doc.update(jwe);
+  const jwe = await did.createDagJWE(
+    {
+      cp,
+      ep,
+      dp,
+      c,
+      e,
+      d,
+    },
+    [did.id]
+  );
+  console.log(JSON.stringify(jwe));
+  await doc.update(jwe);
 
   // The commented-out code below is for implementing a transition effect at the end when developing so there isn't an api call every time I want to test
   // (comment out the api interaction when testing)
@@ -130,7 +127,7 @@ async function openCircle() {
 
   // await transition;
   // }
-  encryptionMessage__cmpt.encryptionComplete();
+  encryptionMessage.encryptionComplete();
 }
 
 async function closeCircle() {
@@ -163,7 +160,8 @@ async function closeCircle() {
   const jwe = doc.content;
 
   const cleartext = await did.decryptDagJWE(jwe);
-  // console.log("cleartext:", cleartext);
+  $.clearText = cleartext;
+  console.log("cleartext:", $.clearText);
   console.log(cleartext.dp);
   printAnswers(cleartext.d);
   console.log(cleartext.cp);
@@ -179,72 +177,3 @@ function printAnswers(answers) {
     console.log(`\n${answer}\n`);
   }
 }
-
-// async function closeCircle() {
-//   const shards = [];
-//   const threshold = parseInt(
-//     await prompt("What was the threshold of your opening ceremony?\n")
-//   );
-//   if (isNaN(threshold)) return;
-//   for (let i = 0; i < threshold; i++) {
-//     console.clear();
-//     shards.push(await prompt(`Enter your shard (${i}):\n`));
-//   }
-//   const mnemonic = await seedsplit.combine(shards);
-//   const seed = new Uint8Array(bip39.mnemonicToSeedSync(mnemonic).slice(0, 32));
-//   const provider = new Ed25519Provider(seed);
-//   const did = new DID({ provider, resolver: KeyResolver.getResolver() });
-//   await did.authenticate();
-//   console.log("did", did.id);
-
-//   const ceramic = new CeramicClient(API_URL);
-//   ceramic.did = did;
-
-//   const doc = await TileDocument.create(
-//     ceramic,
-//     null,
-//     { deterministic: true },
-//     { anchor: false, publish: false }
-//   );
-//   console.log(doc.content);
-//   const jwe = doc.content;
-
-//   const cleartext = await did.decryptDagJWE(jwe);
-//   console.clear();
-// console.log("cleartext:", cleartext);
-// console.log(cleartext.dp);
-// printAnswers(cleartext.d);
-// console.log(cleartext.cp);
-// printAnswers(cleartext.c);
-// console.log(cleartext.ep);
-// printAnswers(cleartext.e);
-// }
-
-// function printAnswers(answers) {
-//   for (const answer of answers) {
-//     console.log(`\n${answer}\n`);
-//   }
-// }
-
-// function prompt(question) {
-//   return new Promise((resolve, reject) => {
-//     const { stdin, stdout } = process;
-
-//     stdin.resume();
-//     stdout.write("\n" + question);
-
-//     const stdinHandler = (data) => {
-//       stdin.off("data", stdinHandler);
-//       stdin.off("error", errorHandler);
-//       resolve(data.toString().trim());
-//     };
-//     const errorHandler = (err) => {
-//       stdin.off("data", stdinHandler);
-//       stdin.off("error", errorHandler);
-//       reject(err);
-//     };
-
-//     stdin.on("data", stdinHandler);
-//     stdin.on("error", errorHandler);
-//   });
-// }

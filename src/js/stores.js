@@ -1,12 +1,13 @@
 "use strict";
 
-import CP from "./lib/openingComponents.js";
+import OC from "./lib/openingComponents.js";
 import { choose_cer__cmpt } from "../app.js";
 
 // Shared State
 let participants;
 let threshold;
 let thresholdClose;
+let clearText;
 const dreams = [];
 const conjurations = [];
 const essence = [];
@@ -18,7 +19,7 @@ const shards = [];
 // Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve) => {
   setTimeout(() => {
-    CP.welcome.replaceWith(choose_cer__cmpt);
+    OC.welcome.replaceWith(choose_cer__cmpt);
     resolve(true);
     console.log("Welcome to Darqnet 🔮");
   }, 7500);
@@ -41,6 +42,7 @@ export default {
   participants,
   threshold,
   thresholdClose,
+  clearText,
   dreams,
   conjurations,
   essence,

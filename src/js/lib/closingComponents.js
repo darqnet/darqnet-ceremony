@@ -70,7 +70,6 @@ class GetThreshold extends HTMLElement {
   
         .query__container {
           margin: 0 auto;
-          max-width: 600px;
           width: 100%;
         }
   
@@ -123,7 +122,7 @@ class GetThreshold extends HTMLElement {
           <div class="teardrop-wrap">
             <div class="teardrop"></div>
           </div>
-          <p class="queryText">What was the threshold of your opening ceremony?</p>
+          <p class="queryText">Mark your opening ceremony threshold.</p>
           <div class="input__container">
             <input type="text" class="input" autofocus />
             <button class="submit">⤗</button>
@@ -175,8 +174,8 @@ class GetShards extends HTMLElement {
           animation: fadeIn 0.4s 2s ease-in forwards;
           color: #fff;
           border-radius: 100px;
-          padding: 0.9em 0.9em 0 0.9em;
-          font-size: 1.4rem;
+          padding: 1.2em 0.9em 0 0.9em;
+          font-size: 1.2rem;
           width: 85%;
           outline: none;
           text-align: center;
@@ -448,6 +447,10 @@ class RevealIntentions extends HTMLElement {
           text-align: center;
         }
 
+        .h2-2, .h2-3 {
+          margin-bottom: 2.5rem;
+        }
+
         h1 {
           opacity: 0;
           font-size: 2.4rem;
@@ -467,7 +470,7 @@ class RevealIntentions extends HTMLElement {
           font-size: 1.85rem;
           font-variant: small-caps;
           color: var(--success);
-          filter: drop-shadow(0 0 0.05em var(--success));
+          filter: drop-shadow(0 0 0.1em var(--success));
           transition: 0.4s all;
         }
 
@@ -484,31 +487,21 @@ class RevealIntentions extends HTMLElement {
           border-radius: 50%;
           filter: drop-shadow(0 0 0.05em var(--success));
           top: -3rem;
-          right: 51.5%;
+          right: 50%;
         }
 
         .responses {
-          text-align: left;
-          padding: 0 5em 0 7em;
+          padding: 0 5em;
         }
 
-        .responses p {
-          font-size: 1.2rem;
-        }
-
-        .response-block {
+        response-block {
           transition: filter 0.4s;
+          text-align: center;
         }
 
         .dream-responses {
           opacity: 0;
           animation: fadeIn 0.4s 2.1s ease-in forwards;
-        }
-
-        p.participant-label {
-          font-size: 1.4rem;
-          color: #6486ff;
-          filter: drop-shadow(0 0 0.1em #6486ff);
         }
 
         .blur {
@@ -557,64 +550,15 @@ class RevealIntentions extends HTMLElement {
         <div class="scrollable-content">
           <div class="responses">
             <h2 class="h2-1">what is your biggest dream for the new year?</h2>
-            <div class="dream-responses">
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">Lorem ipsum</p>
-              </div>
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-            </div>
+            <div class="dream-responses"></div>
           </div>
           <div class="responses">
             <h2 class="h2-2">what will you conjure by the summer solstice?</h2>
-            <div class="conjure-responses">
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-            </div>
+            <div class="conjure-responses"></div>
           </div>
           <div class="responses">
             <h2 class="h2-3">feel into the moment and capture its essence.</h2>
-            <div class="essence-responses">
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-              <div class="response-block">
-                <p class="participant-label">Participant 1</p>
-                <p class="intention-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-            </div>
+            <div class="essence-responses"></div>
           </div>
         </div>
         <button class="submit">⤗</button>
@@ -623,6 +567,18 @@ class RevealIntentions extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(RI.content.cloneNode(true));
 
+    const dreamResponses = shadow.querySelector(".dream-responses");
+    const conjureResponses = shadow.querySelector(".conjure-responses");
+    const essenceResponses = shadow.querySelector(".essence-responses");
+
+    // Inserting and displaying ResponseBlock components
+    for (let i = 0; i < $.clearText.d.length; i++) {
+      dreamResponses.appendChild(new ResponseBlock(i, $.clearText.d[i]));
+      conjureResponses.appendChild(new ResponseBlock(i, $.clearText.c[i]));
+      essenceResponses.appendChild(new ResponseBlock(i, $.clearText.e[i]));
+    }
+
+    // Blurring and Fading on Scroll
     const blurObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -635,11 +591,11 @@ class RevealIntentions extends HTMLElement {
       },
       {
         root: shadow.querySelector(".scrollable-content"),
-        threshold: 0.9,
+        threshold: 1,
       }
     );
 
-    const targetElements = shadow.querySelectorAll(".response-block");
+    const targetElements = shadow.querySelectorAll("response-block");
     targetElements.forEach((el) => {
       blurObserver.observe(el);
     });
@@ -667,15 +623,80 @@ class RevealIntentions extends HTMLElement {
   }
 }
 
+class ResponseBlock extends HTMLElement {
+  constructor(participant, responseText) {
+    super();
+    const RB = document.createElement("template");
+    RB.innerHTML = `
+      <style>
+        @keyframes fadeIn {
+          100% {
+            opacity: 1;
+          }
+        }
+
+        .response-block {
+          opacity: 0;
+          position: relative;
+          margin-bottom: 3rem;
+          padding-right: 2em;
+          padding-left: 2em;
+          transition: filter 0.4s;
+          border-radius: 100px;
+          border-right: solid 1px #04eca3ad;
+          border-left: solid 1px #04eca3ad;
+          transition-property: opacity;
+          transition-duration: 0.4s;
+        }
+
+        p.participant-label {
+          font-size: 1.4rem;
+          color: #6486ff;
+          filter: drop-shadow(0 0 0.1em #6486ff);
+          padding-right: 1.1em;
+        }
+
+        .intention-text {
+          font-size: 1.2rem;
+          min-width: 100%;
+          min-height: 2.5rem;
+          padding-bottom: 1.5em; 
+          position: relative;
+          z-index: 1;
+        }
+      </style>
+    
+      <div class="response-block">
+        <p class="participant-label">Participant 1</p>
+        <p class="intention-text"></p>
+      </div>
+    `;
+    const shadow = this.attachShadow({ mode: "open" });
+    shadow.append(RB.content.cloneNode(true));
+
+    const participantLabel = shadow.querySelector(".participant-label");
+    const intentionText = shadow.querySelector(".intention-text");
+    const responseBlock = shadow.querySelector(".response-block");
+    participantLabel.innerText = `Participant ${participant + 1}`;
+    intentionText.innerText = responseText;
+    setTimeout(() => {
+      responseBlock.style.transitionDelay = `${participant * 0.2 + 0.8}s`;
+      responseBlock.style.opacity = 1;
+    }, 2500);
+  }
+}
+
 function declareComponents() {
   customElements.define("threshold-input", GetThreshold);
   customElements.define("shard-input", GetShards);
   customElements.define("reveal-intentions", RevealIntentions);
+  customElements.define("response-block", ResponseBlock);
 }
 
 export default {
   GetThreshold,
   GetShards,
   RevealIntentions,
+  ResponseBlock,
   declareComponents,
 };
