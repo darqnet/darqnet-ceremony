@@ -122,7 +122,7 @@ async function openCircle() {
   //   setTimeout(() => {
   //     console.log("transitioning");
   //     resolve("transitioning");
-  //   }, 10500);
+  //   }, 5000);
   // });
 
   // await transition;
@@ -161,13 +161,13 @@ async function closeCircle() {
 
   const cleartext = await did.decryptDagJWE(jwe);
   $.clearText = cleartext;
-  console.log("cleartext:", $.clearText);
-  console.log(cleartext.dp);
-  printAnswers(cleartext.d);
-  console.log(cleartext.cp);
-  printAnswers(cleartext.c);
-  console.log(cleartext.ep);
-  printAnswers(cleartext.e);
+  // console.log("cleartext:", $.clearText);
+  // console.log(cleartext.dp);
+  // printAnswers(cleartext.d);
+  // console.log(cleartext.cp);
+  // printAnswers(cleartext.c);
+  // console.log(cleartext.ep);
+  // printAnswers(cleartext.e);
 
   $.replaceComponent(GetShards, new CC.RevealIntentions());
 }

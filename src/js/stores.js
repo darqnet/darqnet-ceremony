@@ -21,6 +21,7 @@ const loadWelcome = new Promise((resolve) => {
   setTimeout(() => {
     OC.welcome.replaceWith(choose_cer__cmpt);
     resolve(true);
+    console.clear();
     console.log("Welcome to Darqnet 🔮");
   }, 7500);
 });

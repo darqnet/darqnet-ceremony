@@ -76,8 +76,9 @@ class GetThreshold extends HTMLElement {
         .queryText {
           opacity: 0;
           font-size: 2.1rem;
+          font-weight: 700;
           text-align: center;
-          filter: drop-shadow(0 0 0.1em var(--flame-color));
+          filter: drop-shadow(0 0 0.3em var(--flame-color));
           animation: fadeIn 0.4s 1.8s ease-in forwards;
           transition: 1s all;
         }
@@ -231,9 +232,10 @@ class GetShards extends HTMLElement {
         }
 
         .queryText {
-          font-size: 1.65rem;
+          font-size: 2rem;
+          font-weight: 700;
           text-align: center;
-          filter: drop-shadow(0 0 0.2em var(--flame-color));
+          filter: drop-shadow(0 0 0.3em var(--flame-color));
           color: #fff;
           transition: 1s all;
         }
@@ -324,7 +326,7 @@ class GetShards extends HTMLElement {
 
       <div class="input__container">
         <div class="heading__container">
-          <p class="queryText">Offer Shard 1.</p>
+          <p class="queryText">OFFER SHARD 1.</p>
         </div>
 
         <div class="flame-outermost">
@@ -366,7 +368,7 @@ class GetShards extends HTMLElement {
           accumulator++;
           this.input.value = "";
           this.input.focus();
-          queryText.innerText = `Offer Shard ${accumulator + 1}.`;
+          queryText.innerText = `OFFER SHARD ${accumulator + 1}.`;
         }
       });
     });
@@ -677,7 +679,7 @@ class ResponseBlock extends HTMLElement {
     const participantLabel = shadow.querySelector(".participant-label");
     const intentionText = shadow.querySelector(".intention-text");
     const responseBlock = shadow.querySelector(".response-block");
-    participantLabel.innerText = `Participant ${participant + 1}`;
+    participantLabel.innerText = `PARTICIPANT ${participant + 1}`;
     intentionText.innerText = responseText;
     setTimeout(() => {
       responseBlock.style.transitionDelay = `${participant * 0.2 + 0.8}s`;

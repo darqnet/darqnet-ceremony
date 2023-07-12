@@ -18,7 +18,6 @@ class ChooseCeremony extends HTMLElement {
     <style>
       .container {
         margin: 0 auto;
-        max-width: 700px;
         width: 100%;
       }
       
@@ -87,12 +86,12 @@ class ChooseCeremony extends HTMLElement {
       
       .selection-buttons {
         display: flex;
-        gap: 3.5rem;
+        gap: 6.5rem;
         justify-content: center;
         align-items: center;
         max-width: 100%;
         margin: 0 auto;
-        margin-top: 4.5rem;
+        margin-top: 8.5rem;
       }
       
       .btn {
@@ -101,9 +100,10 @@ class ChooseCeremony extends HTMLElement {
         color: #fff;
         font: inherit;
         text-align: center;
-        font-size: 1.6rem;
+        font-size: 2.2rem;
+        font-weight: 700;
+        font-variant: small-caps;
         display: block;
-        padding: 0 1.3em 1.3em 1.3em;
         background: transparent;
         border: transparent;
         border-radius: 50%;
@@ -195,8 +195,8 @@ class ChooseCeremony extends HTMLElement {
         </div>
       </div>
       <div class="selection-buttons">
-        <button class="btn btn-open">Opening Ceremony</button>
-        <button class="btn btn-close">Closing Ceremony</button>
+        <button class="btn btn-open">opening ceremony</button>
+        <button class="btn btn-close">closing ceremony</button>
       </div>
     </div>
     `;
@@ -330,8 +330,9 @@ class GetParticipants extends HTMLElement {
       .queryText {
         opacity: 0;
         font-size: 2.1rem;
+        font-weight: 700;
         text-align: center;
-        filter: drop-shadow(0 0 0.1em var(--flame-color));
+        filter: drop-shadow(0 0 0.35em var(--flame-color));
         animation: fadeIn 0.4s 1.8s ease-in forwards;
         transition: 1s all;
       }
@@ -510,8 +511,9 @@ class GetConjurations extends HTMLElement {
 
         .queryText {
           font-size: 1.65rem;
+          font-weight: 700;
           text-align: center;
-          filter: drop-shadow(0 0 0.1em var(--flame-color));
+          filter: drop-shadow(0 0 0.1em #fff);
           transition: 1s all;
         }
 
@@ -601,7 +603,7 @@ class GetConjurations extends HTMLElement {
 
       <div class="input__container">
         <div class="heading__container">
-          <p class="participant-label">Participant N</p>
+          <p class="participant-label"></p>
           <p class="queryText">What is your biggest dream for the new year?</p>
         </div>
 
@@ -631,7 +633,7 @@ class GetConjurations extends HTMLElement {
     this.input = shadow.querySelector(".input");
     const submitBTN = shadow.querySelector(".submit");
     const participantLabel = shadow.querySelector(".participant-label");
-    participantLabel.innerText = `Participant ${ptNum + 1}`;
+    participantLabel.innerText = `PARTICIPANT ${ptNum + 1}`;
     const queryText = shadow.querySelector(".queryText");
 
     let acquiredDreams = false;
@@ -642,27 +644,32 @@ class GetConjurations extends HTMLElement {
       if (!acquiredDreams) {
         $.dreams = [...$.dreams, this.input.value];
         acquiredDreams = true;
-        this.input.value = "";
-        queryText.innerText = $.conjurationPrompt;
         this.input.focus();
       } else if (!acquiredConjurations) {
         $.conjurations = [...$.conjurations, this.input.value];
         acquiredConjurations = true;
-        this.input.value = "";
-        queryText.innerText = $.essencePrompt;
         this.input.focus();
       } else if (acquiredDreams && acquiredConjurations) {
         $.essence = [...$.essence, this.input.value];
         acquiredEssence = true;
-        this.input.value = "";
       }
       return true;
     };
 
     this.acquire_entries = new Promise((resolve) => {
       submitBTN.addEventListener("click", () => {
+        queryText.style.opacity = 0;
         this.push_inputs();
-        if (acquiredEssence) resolve(true);
+        this.input.value = "";
+        setTimeout(() => {
+          if (acquiredDreams && !acquiredConjurations) {
+            queryText.innerText = $.conjurationPrompt;
+          } else if (acquiredConjurations) {
+            queryText.innerText = $.essencePrompt;
+          }
+          if (acquiredEssence) resolve(true);
+          else queryText.style.opacity = 1;
+        }, 1000);
       });
     });
   }
@@ -693,6 +700,7 @@ class SeedphraseDisplay extends HTMLElement {
 
         .seedphrase__directive {
           font-size: 1.8rem;
+          font-weight: 700;
           filter: drop-shadow(0 0 0.4em var(--flame-color));
           animation: fadeIn 0.4s 1.2s ease-in forwards;
           margin: 0;
@@ -931,8 +939,10 @@ class EncryptionMessage extends HTMLElement {
         .encryptionMessage__content {
           opacity: 0;
           font-size: 2.1rem;
+          font-weight: 700;
           text-align: center;
-          filter: drop-shadow(0 0 0.1em var(--flame-color));
+          margin-top: 5rem;
+          filter: drop-shadow(0 0 0.1em #fff);
           text-align: center;
           transition: 0.5s all;
         }
@@ -946,7 +956,7 @@ class EncryptionMessage extends HTMLElement {
           </div>
         <div class="flame-base" type="default"></div>
       </div>
-      <p class="encryptionMessage__content">Encrypting Intentions</p>
+      <p class="encryptionMessage__content">ENCRYPTING INTENTIONS</p>
     `;
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(EM.content.cloneNode(true));
@@ -955,7 +965,7 @@ class EncryptionMessage extends HTMLElement {
     this.encryptionComplete = function () {
       setTimeout(() => {
         this.msg_content.style.opacity = 1;
-        this.msg_content.innerText = "Ceremony Complete.";
+        this.msg_content.innerText = "CEREMONY COMPLETE";
       }, 10000);
       setTimeout(() => {
         this.msg_content.style.opacity = 0;
