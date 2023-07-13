@@ -1,7 +1,7 @@
 "use strict";
 
 import OC from "./lib/openingComponents.js";
-import { choose_cer__cmpt } from "../app.js";
+import { ChooseCeremony } from "../app.js";
 
 // Shared State
 let participants;
@@ -19,7 +19,7 @@ const shards = [];
 // Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve) => {
   setTimeout(() => {
-    OC.welcome.replaceWith(choose_cer__cmpt);
+    OC.welcome.replaceWith(ChooseCeremony);
     resolve(true);
     console.clear();
     console.log("Welcome to Darqnet 🔮");

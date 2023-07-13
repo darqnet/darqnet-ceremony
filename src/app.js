@@ -16,35 +16,27 @@ const API_URL = "https://ceramic-clay.3boxlabs.com";
 // Register Components
 OC.declareComponents();
 CC.declareComponents();
-export const choose_cer__cmpt = new OC.ChooseCeremony();
-const get_participants__cmpt = new OC.GetParticipants();
-const GetThreshold = new CC.GetThreshold();
-let encryptionMessage;
+export const ChooseCeremony = new OC.ChooseCeremony();
+let GetParticipants;
+let GetThreshold;
+let EncryptionMessage;
 
 // Start Ceremony
 async function startCeremony() {
-  let chooseCeremony;
-  const loaded = await $.loadWelcome;
-  if (loaded) {
-    chooseCeremony = document.querySelector("choose-ceremony");
-  }
-  const ceremonyType = await choose_cer__cmpt.selection;
+  await $.loadWelcome;
+  const ceremonyType = await ChooseCeremony.selection;
   if (ceremonyType === "open") {
     console.log("opening ceremony.");
-    $.replaceComponent(chooseCeremony, get_participants__cmpt);
-    setTimeout(() => {
-      get_participants__cmpt.input.focus();
-    }, 1000);
+    GetParticipants = new OC.GetParticipants();
+    $.replaceComponent(ChooseCeremony, GetParticipants);
     await openCircle();
   } else if (ceremonyType === "close") {
     console.log("closing ceremony.");
-    $.replaceComponent(chooseCeremony, GetThreshold);
-    setTimeout(() => {
-      GetThreshold.input.focus();
-    }, 1000);
+    GetThreshold = new CC.GetThreshold();
+    $.replaceComponent(ChooseCeremony, GetThreshold);
     await closeCircle();
   }
-  // console.log("Ceremonial sequence end");
+  console.log("Ceremony Complete.");
 }
 
 startCeremony();
@@ -56,7 +48,7 @@ async function openCircle() {
   const did = new DID({ provider, resolver: KeyResolver.getResolver() });
   await did.authenticate();
 
-  await get_participants__cmpt.acquiredPT;
+  await GetParticipants.acquiredPT;
   console.log("participants:", $.participants, "threshold:", $.threshold);
   const shards = await seedsplit.split(mnemonic, $.participants, $.threshold);
 
@@ -82,8 +74,8 @@ async function openCircle() {
     await seedphraseDisplay.acceptPhrase;
   }
 
-  encryptionMessage = new OC.EncryptionMessage();
-  $.replaceComponent(OC.ceremonyContainer.childNodes[1], encryptionMessage);
+  EncryptionMessage = new OC.EncryptionMessage();
+  $.replaceComponent(OC.ceremonyContainer.childNodes[1], EncryptionMessage);
 
   const ceramic = new CeramicClient(API_URL);
   ceramic.did = did;
@@ -127,7 +119,7 @@ async function openCircle() {
 
   // await transition;
   // }
-  encryptionMessage.encryptionComplete();
+  EncryptionMessage.encryptionComplete();
 }
 
 async function closeCircle() {
@@ -140,6 +132,8 @@ async function closeCircle() {
   }, 1000);
   await GetShards.collectShards;
   console.log($.shards);
+  const DecryptionMessage = new CC.DecryptionMessage();
+  $.replaceComponent(GetShards, DecryptionMessage);
 
   // Decryption + API call
   const mnemonic = await seedsplit.combine($.shards);
@@ -169,7 +163,8 @@ async function closeCircle() {
   // console.log(cleartext.ep);
   // printAnswers(cleartext.e);
 
-  $.replaceComponent(GetShards, new CC.RevealIntentions());
+  await DecryptionMessage.transition;
+  $.replaceComponent(DecryptionMessage, new CC.RevealIntentions());
 }
 
 function printAnswers(answers) {

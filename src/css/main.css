@@ -38,6 +38,16 @@
     #971513,
     #780202
   );
+
+  --decrypt-gradient: linear-gradient(
+    to right bottom,
+    #04eca3,
+    #01c78a,
+    #01a371,
+    #028159,
+    #036042
+  );
+
   --close-circle: rgb(255, 86, 86);
   --open-circle: #fbe995;
   --flame-color: #1942f9;
@@ -206,7 +216,8 @@ button {
 conjuration-input,
 encryption-message,
 shard-input,
-reveal-intentions {
+reveal-intentions,
+decryption-message {
   width: 100%;
 }
 

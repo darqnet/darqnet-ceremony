@@ -293,6 +293,10 @@ class GetParticipants extends HTMLElement {
       }
 
       .submit {
+        opacity: 0;
+        animation: fadeIn 0.4s 2.8s ease-in forwards;
+        rotate: 90deg;
+        margin-top: 1rem;
         font-size: 2.7rem;
         outline-color: transparent;
         color: #fff;
@@ -303,6 +307,7 @@ class GetParticipants extends HTMLElement {
 
       .submit:hover,
       .submit:focus {
+        rotate: 0deg;
         cursor: pointer;
         color: #9d9d9d;
         outline: transparent;
@@ -333,7 +338,6 @@ class GetParticipants extends HTMLElement {
         font-weight: 700;
         text-align: center;
         filter: drop-shadow(0 0 0.35em var(--flame-color));
-        animation: fadeIn 0.4s 1.8s ease-in forwards;
         transition: 1s all;
       }
 
@@ -380,7 +384,7 @@ class GetParticipants extends HTMLElement {
         <p class="queryText">How many have gathered?</p>
         <div class="input__container">
           <input type="text" class="input" autofocus />
-          <button class="submit">⤗</button>
+          <button class="submit">&#5129</button>
         </div>
     </div>
     `;
@@ -394,13 +398,22 @@ class GetParticipants extends HTMLElement {
     let gotPar = false;
     let gotThresh = false;
 
+    setTimeout(() => {
+      queryText1.style.opacity = 1;
+      this.input.focus();
+    }, 2400);
+
     this.acquiredPT = new Promise((resolve) => {
       submitBTN.addEventListener("click", () => {
         if (!gotPar) {
           if (!isNaN(parseInt(this.input.value))) {
+            queryText1.style.opacity = 0;
             $.participants = parseInt(this.input.value);
             gotPar = true;
-            queryText1.innerText = "What is your threshold?";
+            setTimeout(() => {
+              queryText1.innerText = "What is your threshold?";
+              queryText1.style.opacity = 1;
+            }, 1200);
             this.input.value = "";
             this.input.focus();
           }
@@ -460,7 +473,9 @@ class GetConjurations extends HTMLElement {
 
         .submit {
           opacity: 0;
-          animation: fadeIn 0.4s 2.7s ease-in forwards;
+          animation: fadeIn 0.4s 2.6s ease-in forwards;
+          rotate: 90deg;
+          margin-top: 1rem;
           font-size: 2.7rem;
           outline-color: transparent;
           color: #fff;
@@ -468,9 +483,10 @@ class GetConjurations extends HTMLElement {
           border-radius: 50%;
           width: min-content;
         }
-
+  
         .submit:hover,
         .submit:focus {
+          rotate: 0deg;
           cursor: pointer;
           color: #9d9d9d;
           outline: transparent;
@@ -623,7 +639,7 @@ class GetConjurations extends HTMLElement {
 
         <div class="input__area">
           <textarea type="text" class="input"></textarea>
-          <button class="submit">⤗</button>
+          <button class="submit">&#5129</button>
         </div>
       </div>
     `;
@@ -710,24 +726,32 @@ class SeedphraseDisplay extends HTMLElement {
           font-size: 1.35rem;
           animation: fadeIn 0.4s 1.9s ease-in forwards;
           margin: 4.7rem 0 2rem 0;
-          color: #4d58ff;
+          color: var(--open-circle);
         }
 
-        .seedphrase__acceptBTN {
+        button {
+          background: transparent;
+          font: inherit;
+          transition: 0.4s all;
+          border: transparent;
+        }
+
+        .submit {
           opacity: 0;
+          animation: fadeIn 0.4s 2.6s ease-in forwards;
+          rotate: 90deg;
+          margin-top: 1rem;
           font-size: 2.7rem;
-          outline: transparent;
+          outline-color: transparent;
           color: #fff;
           filter: drop-shadow(0 0 0.1em var(--flame-color));
           border-radius: 50%;
-          background: transparent;
-          transition: 0.4s all;
-          border: transparent;
-          animation: fadeIn 0.4s 2.5s ease-in forwards;
+          width: min-content;
         }
-
-        .seedphrase__acceptBTN:hover,
-        .seedphrase__acceptBTN:focus {
+  
+        .submit:hover,
+        .submit:focus {
+          rotate: 0deg;
           cursor: pointer;
           color: #9d9d9d;
           outline: transparent;
@@ -779,14 +803,14 @@ class SeedphraseDisplay extends HTMLElement {
           voluptate nesciunt quidem eos, cumque dolorem totam excepturi
           similique quasi iste!
         </p>
-        <button class="seedphrase__acceptBTN">⤗</button>
+        <button class="submit">&#5129</button>
       </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
     shadow.append(SD.content.cloneNode(true));
 
     const seedphraseContent = shadow.querySelector(".seedphrase__content");
-    const acceptBTN = shadow.querySelector(".seedphrase__acceptBTN");
+    const acceptBTN = shadow.querySelector(".submit");
     seedphraseContent.innerText = seedphraseText;
 
     this.acceptPhrase = new Promise((resolve, reject) => {
@@ -821,10 +845,10 @@ class EncryptionMessage extends HTMLElement {
           min-height: 1.25rem;
           max-width: 2.5rem;
           width: 100%;
-          background-color: #fff;
+          background-color: var(--flame-color);
           border-radius: 2.5rem 2.5rem 0 0;
           transform: rotate(180deg);
-          filter: drop-shadow(0 0 0.3em #fff);
+          filter: drop-shadow(0 0 0.3em var(--flame-color));
           z-index: 4;
           margin: 8rem 0 1rem 0;
           transition: 0.5s all;
