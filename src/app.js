@@ -131,12 +131,12 @@ async function closeCircle() {
     GetShards.input.focus();
   }, 1000);
   await GetShards.collectShards;
-  console.log($.shards);
-  const DecryptionMessage = new CC.DecryptionMessage();
-  $.replaceComponent(GetShards, DecryptionMessage);
+  // console.log($.shards);
 
   // Decryption + API call
   const mnemonic = await seedsplit.combine($.shards);
+  const DecryptionMessage = new CC.DecryptionMessage();
+  $.replaceComponent(GetShards, DecryptionMessage);
   const seed = new Uint8Array(Bip39.mnemonicToSeedSync(mnemonic).slice(0, 32));
   const provider = new Ed25519Provider(seed);
   const did = new DID({ provider, resolver: KeyResolver.getResolver() });
@@ -152,23 +152,9 @@ async function closeCircle() {
   );
   console.log(doc.content);
   const jwe = doc.content;
-
   const cleartext = await did.decryptDagJWE(jwe);
   $.clearText = cleartext;
-  // console.log("cleartext:", $.clearText);
-  // console.log(cleartext.dp);
-  // printAnswers(cleartext.d);
-  // console.log(cleartext.cp);
-  // printAnswers(cleartext.c);
-  // console.log(cleartext.ep);
-  // printAnswers(cleartext.e);
 
   await DecryptionMessage.transition;
   $.replaceComponent(DecryptionMessage, new CC.RevealIntentions());
-}
-
-function printAnswers(answers) {
-  for (const answer of answers) {
-    console.log(`\n${answer}\n`);
-  }
 }

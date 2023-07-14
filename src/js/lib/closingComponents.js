@@ -1,6 +1,7 @@
 "use strict";
 
 import $ from "../stores.js";
+import * as Bip39 from "bip39";
 
 class GetThreshold extends HTMLElement {
   constructor() {
@@ -371,20 +372,43 @@ class GetShards extends HTMLElement {
 
     this.collectShards = new Promise((resolve) => {
       submitBTN.addEventListener("click", () => {
-        queryText.style.opacity = 0;
-        if (accumulator === $.thresholdClose - 1) {
-          $.shards.push(this.input.value.trim());
-          this.input.value = "";
-          resolve(true);
-        } else {
-          $.shards.push(this.input.value.trim());
-          accumulator++;
-          this.input.value = "";
+        if (
+          !Bip39.validateMnemonic(
+            this.input.value.trim().split(" ").slice(1).join(" ")
+          )
+        ) {
+          queryText.style.opacity = 0;
           this.input.focus();
           setTimeout(() => {
+            queryText.style.color = "var(--close-circle)";
+            queryText.style.filter =
+              "drop-shadow(0 0 0.4em var(--close-circle))";
             queryText.style.opacity = 1;
-            queryText.innerText = `OFFER SHARD ${accumulator + 1}.`;
+            queryText.innerText = `INVALID. OFFER SHARD ${
+              accumulator + 1
+            } AGAIN.`;
           }, 1200);
+        } else {
+          queryText.style.opacity = 0;
+          setTimeout(() => {
+            queryText.style.color = "#fff";
+            queryText.style.filter =
+              "drop-shadow(0 0 0.3em var(--flame-color))";
+          }, 1200);
+          if (accumulator === $.thresholdClose - 1) {
+            $.shards.push(this.input.value.trim());
+            this.input.value = "";
+            resolve(true);
+          } else {
+            $.shards.push(this.input.value.trim());
+            accumulator++;
+            this.input.value = "";
+            this.input.focus();
+            setTimeout(() => {
+              queryText.style.opacity = 1;
+              queryText.innerText = `OFFER SHARD ${accumulator + 1}.`;
+            }, 1200);
+          }
         }
       });
     });
@@ -580,7 +604,6 @@ class RevealIntentions extends HTMLElement {
             <div class="essence-responses"></div>
           </div>
         </div>
-        <button class="submit">&#5129;</button>
       </div>
     `;
     const shadow = this.attachShadow({ mode: "open" });
