@@ -482,6 +482,11 @@ class RevealIntentions extends HTMLElement {
           scrollbar-width: none;
         }
 
+        ::-webkit-scrollbar {
+          background: transparent; /* Chrome/Safari/Webkit */
+          width: 0px;
+        }
+
         h1,
         h2 {
           text-align: center;
@@ -498,7 +503,7 @@ class RevealIntentions extends HTMLElement {
           color: #fff;
           filter: drop-shadow(0 0 0.1em #fff);
           margin-top: 0rem;
-          margin-bottom: 1rem;
+          margin-bottom: 3rem;
           text-align: center;
           animation: fadeIn 0.4s 1s ease-in forwards;
         }

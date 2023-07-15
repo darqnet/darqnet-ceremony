@@ -19,6 +19,8 @@ const shards = [];
 // Loads the initial fade-in welcome message
 const loadWelcome = new Promise((resolve) => {
   setTimeout(() => {
+    const mask = document.querySelector(".background-mask");
+    mask.style.opacity = 1;
     OC.welcome.replaceWith(ChooseCeremony);
     resolve(true);
     console.clear();

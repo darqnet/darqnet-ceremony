@@ -104,9 +104,9 @@ class ChooseCeremony extends HTMLElement {
         font-weight: 700;
         font-variant: small-caps;
         display: block;
+        padding: 0;
         background: transparent;
         border: transparent;
-        border-radius: 50%;
         transition: 0.4s all;
         filter: drop-shadow(0 0 0.5em var(--flame-color));
       }
@@ -174,6 +174,20 @@ class ChooseCeremony extends HTMLElement {
       @keyframes fadeIn {
         100% {
           opacity: 1;
+        }
+      }
+
+      @media screen and (-webkit-min-device-pixel-ratio:0) {
+        /* Safari and Chrome */
+        .btn {
+          font-size: 2.5rem;
+        }
+      }
+
+      @-moz-document url-prefix() {
+        /* Firefox */
+        .btn {
+          font-size: 2.2rem;
         }
       }
     </style>
