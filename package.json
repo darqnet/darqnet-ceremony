@@ -9,6 +9,7 @@
     "@ceramicnetwork/stream-tile": "^2.20.0",
     "bip39": "^3.1.0",
     "dids": "^4.0.0",
+    "gh-pages": "^5.0.0",
     "key-did-provider-ed25519": "^3.0.0",
     "key-did-resolver": "^3.0.0",
     "parcel": "^2.0.0-nightly.1281",
@@ -25,8 +26,8 @@
     "stream-browserify": "^3.0.0"
   },
   "scripts": {
-    "dev": "parcel src/*.html --dist-dir build",
-    "build": "parcel build src/*.html --dist-dir build"
+    "dev": "parcel src/*.html --dist-dir dist",
+    "build": "parcel build src/*.html --dist-dir dist"
   },
   "author": "",
   "license": "ISC"
