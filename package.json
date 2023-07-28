@@ -5,14 +5,14 @@
   "default": "index.html",
   "type": "module",
   "dependencies": {
-    "@ceramicnetwork/http-client": "^2.21.0",
-    "@ceramicnetwork/stream-tile": "^2.20.0",
-    "bip39": "^3.1.0",
-    "dids": "^4.0.0",
+    "@ceramicnetwork/http-client": "^1.5.8-rc.0",
+    "@ceramicnetwork/stream-tile": "^1.5.8-rc.0",
+    "bip39": "^3.0.4",
+    "dids": "^2.4.0",
     "gh-pages": "^5.0.0",
-    "key-did-provider-ed25519": "^3.0.0",
-    "key-did-resolver": "^3.0.0",
-    "parcel": "^2.0.0-nightly.1281",
+    "key-did-provider-ed25519": "^1.1.0",
+    "key-did-resolver": "^1.4.0",
+    "parcel": "^2.0.0-nightly.1293",
     "sss-wasm": "^0.4.0",
     "uint8arrays": "^4.0.4"
   },
@@ -27,8 +27,8 @@
   },
   "scripts": {
     "dev": "parcel src/*.html --dist-dir dist",
-    "build": "parcel build src/*.html --dist-dir dist",
-    "predeploy": "rm -rf dist && parcel build index.html --public-url .",
+    "build": "rm -rf dist && parcel build src/*.html --dist-dir dist",
+    "predeploy": "rm -rf dist && parcel build src/index.html --public-url .",
     "deploy": "gh-pages -d dist"
   },
   "author": "",
