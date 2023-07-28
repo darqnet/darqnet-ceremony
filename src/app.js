@@ -14,16 +14,45 @@ import $ from "./js/stores.js";
 const API_URL = "https://ceramic-clay.3boxlabs.com";
 
 // Register Components
-OC.declareComponents();
-CC.declareComponents();
-export const ChooseCeremony = new OC.ChooseCeremony();
+
+// opening
+customElements.define("choose-ceremony", OC.ChooseCeremony);
+customElements.define("participant-input", OC.GetParticipants);
+customElements.define("conjuration-input", OC.GetConjurations);
+customElements.define("seedphrase-display", OC.SeedphraseDisplay);
+customElements.define("encryption-message", OC.EncryptionMessage);
+
+// closing
+customElements.define("threshold-input", CC.GetThreshold);
+customElements.define("shard-input", CC.GetShards);
+customElements.define("reveal-intentions", CC.RevealIntentions);
+customElements.define("response-block", CC.ResponseBlock);
+customElements.define("decryption-message", CC.DecryptionMessage);
+
+const ChooseCeremony = new OC.ChooseCeremony();
+// these next two lines ensure these elements aren't undefined
+OC.welcome;
+ChooseCeremony;
+
 let GetParticipants;
 let GetThreshold;
 let EncryptionMessage;
 
+// Loads the initial fade-in welcome message
+const loadWelcome = new Promise((resolve) => {
+  setTimeout(() => {
+    const mask = document.querySelector(".background-mask");
+    mask.style.opacity = 1;
+    OC.welcome.replaceWith(ChooseCeremony);
+    resolve(true);
+    console.clear();
+    console.log("Welcome to Darqnet 🔮");
+  }, 7500);
+});
+
 // Start Ceremony
 async function startCeremony() {
-  await $.loadWelcome;
+  await loadWelcome;
   const ceremonyType = await ChooseCeremony.selection;
   if (ceremonyType === "open") {
     console.log("opening ceremony.");
@@ -107,7 +136,9 @@ async function openCircle() {
   console.log(JSON.stringify(jwe));
   await doc.update(jwe);
 
-  // The commented-out code below is for implementing a transition effect at the end when developing so there isn't an api call every time I want to test
+  // Tests transition without posting to Ceramic server
+  // *
+  // *
   // (comment out the api interaction when testing)
   // {
   // const transition = new Promise((resolve) => {

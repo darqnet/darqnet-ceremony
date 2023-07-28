@@ -4,7 +4,6 @@ import $ from "../stores.js";
 
 // DOM
 const welcome = document.querySelector(".welcome");
-const ripple = document.querySelector(".ripple");
 const ceremonyContainer = document.querySelector(".ceremonyContainer");
 
 // COMPONENTS
@@ -1028,25 +1027,12 @@ class EncryptionMessage extends HTMLElement {
   }
 }
 
-function declareComponents() {
-  customElements.define("choose-ceremony", ChooseCeremony);
-  customElements.define("participant-input", GetParticipants);
-  customElements.define("conjuration-input", GetConjurations);
-  customElements.define("seedphrase-display", SeedphraseDisplay);
-  customElements.define("encryption-message", EncryptionMessage);
-}
-
-// this is only for testing, remove once component is implemented into ceremony_ui.js
-// declareComponents();
-
 export default {
   welcome,
-  ripple,
   ceremonyContainer,
   ChooseCeremony,
   GetParticipants,
   GetConjurations,
   SeedphraseDisplay,
   EncryptionMessage,
-  declareComponents,
 };

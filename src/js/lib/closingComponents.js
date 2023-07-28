@@ -949,19 +949,10 @@ class DecryptionMessage extends HTMLElement {
   }
 }
 
-function declareComponents() {
-  customElements.define("threshold-input", GetThreshold);
-  customElements.define("shard-input", GetShards);
-  customElements.define("reveal-intentions", RevealIntentions);
-  customElements.define("response-block", ResponseBlock);
-  customElements.define("decryption-message", DecryptionMessage);
-}
-
 export default {
   GetThreshold,
   GetShards,
   RevealIntentions,
   ResponseBlock,
   DecryptionMessage,
-  declareComponents,
 };
