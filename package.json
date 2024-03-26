@@ -1,36 +1,49 @@
 {
-  "name": "darqnet",
+  "name": "darqnet-vue",
   "version": "1.0.0",
   "description": "",
-  "default": "index.html",
   "type": "module",
+  "targets": {
+    "myapp": {
+      "source": "src/index.html",
+      "distDir": "dist",
+      "context": "browser",
+      "outputFormat": "global"
+    }
+  },
+  "scripts": {
+    "dev": "parcel",
+    "build": "rm -rf dist && parcel build --public-url /darqnet-vue/",
+    "deploy": "gh-pages -d dist"
+  },
+  "alias": {
+    "vue": "vue/dist/vue.esm-browser.prod.js"
+  },
+  "keywords": [],
+  "author": "Conor Kelley",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-vue": "^2.12.0",
+    "crypto-browserify": "^3.12.0",
+    "events": "^3.3.0",
+    "gh-pages": "^6.1.1",
+    "parcel": "^2.12.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "string_decoder": "^1.3.0",
+    "vm-browserify": "^1.1.2"
+  },
   "dependencies": {
     "@ceramicnetwork/http-client": "^1.5.8-rc.0",
     "@ceramicnetwork/stream-tile": "^1.5.8-rc.0",
+    "@fontsource/im-fell-double-pica-sc": "^5.0.8",
+    "@fontsource/im-fell-dw-pica": "^5.0.8",
     "bip39": "^3.0.4",
     "dids": "^2.4.0",
-    "gh-pages": "^5.0.0",
     "key-did-provider-ed25519": "^1.1.0",
     "key-did-resolver": "^1.4.0",
-    "parcel": "^2.0.0-nightly.1293",
     "sss-wasm": "^0.4.0",
-    "uint8arrays": "^4.0.4"
-  },
-  "devDependencies": {
-    "buffer": "^5.7.1",
-    "crypto-browserify": "^3.12.0",
-    "events": "^3.3.0",
-    "path-browserify": "^1.0.1",
-    "prettier": "^2.8.3",
-    "process": "^0.11.10",
-    "stream-browserify": "^3.0.0"
-  },
-  "scripts": {
-    "dev": "parcel src/*.html --dist-dir dist",
-    "build": "rm -rf dist && parcel build src/*.html --dist-dir dist",
-    "predeploy": "rm -rf dist && parcel build src/index.html --public-url .",
-    "deploy": "gh-pages -d dist"
-  },
-  "author": "",
-  "license": "ISC"
+    "vue": "^3.4.21"
+  }
 }
