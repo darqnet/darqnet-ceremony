@@ -1,5 +1,5 @@
 {
-  "name": "darqnet-vue",
+  "name": "darqnet-ceremony",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev": "parcel",
-    "build": "rm -rf dist && parcel build --public-url /darqnet-vue/",
+    "build": "rm -rf dist && parcel build --public-url /darqnet-ceremony/",
     "deploy": "gh-pages -d dist"
   },
   "alias": {
