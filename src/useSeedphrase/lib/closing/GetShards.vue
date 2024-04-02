@@ -35,12 +35,13 @@ function validateShard() {
 
 <template>
   <div class="input__container" :class="{ faded: gotShard }">
+    <p class="keyholder-label">shardbearer {{ props.shardNumber }}</p>
     <div class="heading__container">
       <p
         class="queryText"
         :class="{ faded: isFaded, invalidShardMessage: invalidShard }"
       >
-        <span v-if="!invalidShard">offer shard {{ props.shardNumber }}.</span>
+        <span v-if="!invalidShard">offer your shard.</span>
         <span v-if="invalidShard"
           >invalid. offer shard {{ props.shardNumber }} again.</span
         >
@@ -73,6 +74,15 @@ function validateShard() {
   opacity: 0;
 }
 
+.keyholder-label {
+  opacity: 0;
+  animation: fadeIn 0.4s 1.2s ease-in forwards;
+  margin-top: 0;
+  font-size: 2.4rem;
+  color: var(--close-circle);
+  filter: drop-shadow(0 0 0.2em var(--close-circle));
+}
+
 textarea,
 button {
   background: transparent;
@@ -82,18 +92,19 @@ button {
 }
 
 .input {
+  color: var(--open-circle);
   opacity: 0;
   animation: fadeIn 0.4s 2s ease-in forwards;
-  color: #fff;
   border-radius: 100px;
-  padding: 1.2em 0.9em 0 0.9em;
-  font-family: "IM Fell DW Pica", serif;
+  padding: 0.5em 1.2em;
+  font-family: "Merriweather", serif;
   font-size: 1.2rem;
-  min-width: 700px;
+  line-height: 2.2rem;
+  min-width: 1000px;
   outline: none;
   text-align: center;
-  border-right: solid 1px #fbe9954d;
-  border-left: solid 1px #fbe9954d;
+  border-right: solid 1px var(--flame-color);
+  border-left: solid 1px var(--flame-color);
   min-height: 6rem;
   resize: none;
 }
@@ -123,6 +134,7 @@ button {
   display: flex;
   align-items: center;
   flex-direction: column;
+  max-width: 1000px;
   width: 100%;
   min-height: 700px;
   margin: 0 auto;
@@ -142,7 +154,6 @@ button {
 
 .heading__container {
   opacity: 0;
-  margin-top: 4.5rem;
   text-align: center;
   animation: fadeIn 0.4s 1.8s ease-in forwards;
 }

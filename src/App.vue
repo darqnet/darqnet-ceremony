@@ -1,6 +1,7 @@
 <script setup>
 import "@fontsource/im-fell-double-pica-sc";
 import "@fontsource/im-fell-dw-pica";
+import "@fontsource/merriweather";
 import { ref } from "vue";
 import { store } from "./useSeedphrase/lib/store";
 import { onMounted } from "vue";
@@ -11,7 +12,8 @@ import EncryptionMessage from "./useSeedphrase/lib/opening/EncryptionMessage.vue
 import GetThreshold from "./useSeedphrase/lib/closing/GetThreshold.vue";
 import GetShards from "./useSeedphrase/lib/closing/GetShards.vue";
 import DecryptionMessage from "./useSeedphrase/lib/closing/DecryptionMessage.vue";
-import ErrorMessage from "./useSeedphrase/lib/closing/ErrorMessage.vue";
+import ErrorMessageCL from "./useSeedphrase/lib/closing/ErrorMessageCL.vue";
+import ErrorMessageOP from "./useSeedphrase/lib/opening/ErrorMessageOP.vue";
 import RevealIntentions from "./useSeedphrase/lib/closing/RevealIntentions.vue";
 import MobileMessage from "./useSeedphrase/lib/MobileMessage.vue";
 let welcomeVisible = ref(true);
@@ -51,8 +53,12 @@ onMounted(() => {
   />
 
   <Transition>
-    <EncryptionMessage v-if="store.acquiredIntentions" />
+    <EncryptionMessage
+      v-if="store.acquiredIntentions && !store.encryptionError"
+    />
   </Transition>
+
+  <ErrorMessageOP v-if="store.encryptionError" />
 
   <!-- CLOSING CEREMONY -->
 
@@ -74,7 +80,7 @@ onMounted(() => {
     />
   </Transition>
 
-  <ErrorMessage v-if="store.decryptionError" />
+  <ErrorMessageCL v-if="store.decryptionError" />
 
   <RevealIntentions
     v-if="!store.decryptionVisible && store.intentionsVisible"

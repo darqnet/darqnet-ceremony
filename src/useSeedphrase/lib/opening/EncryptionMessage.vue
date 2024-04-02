@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { store } from "../store";
 
 let isFaded = ref(false);
 let encryptionDone = ref(false);
@@ -20,7 +21,10 @@ setTimeout(() => {
 </script>
 
 <template>
-  <div class="orb-container container">
+  <div
+    class="orb-container container"
+    :class="{ errorFade: store.encryptionError }"
+  >
     <div class="orb" :type="type" :class="{ faded: isFaded }"></div>
     <div class="flame-container container">
       <div class="flame flame-1"></div>
@@ -29,7 +33,10 @@ setTimeout(() => {
     </div>
     <div class="flame-base" :type="type"></div>
   </div>
-  <p class="encryptionMessage__content">
+  <p
+    class="encryptionMessage__content"
+    :class="{ errorFade: store.encryptionError }"
+  >
     <span v-if="!encryptionDone" :class="{ faded: isFaded }"
       >encrypting intentions</span
     >
@@ -46,6 +53,7 @@ setTimeout(() => {
 
 .container {
   max-width: 18rem;
+  transition: opacity 0.5s;
 }
 
 .flame-container {

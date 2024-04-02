@@ -90,7 +90,7 @@ function validateKT() {
     <p class="queryText">
       <span v-if="!gotParticipants">how many have gathered?</span>
       <span v-if="!gotKeyHolders && gotParticipants"
-        >how many keys shall be created?</span
+        >how many shards will you create?</span
       >
       <span v-if="keyHolderFadeOut">what shall be the threshold?</span>
     </p>

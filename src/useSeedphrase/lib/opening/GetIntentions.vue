@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { onMounted } from "vue";
 import SeedphraseDisplay from "./SeedphraseDisplay.vue";
+import { store } from "../store";
 
 let gotDreams = ref(false);
 let gotConjurations = ref(false);
@@ -44,10 +45,18 @@ async function pushIntentions() {
     essence = input.value;
     essenceFadeOut.value = true;
     input.value = "";
-    isFaded.value = true;
-    setTimeout(() => {
-      seedphraseVisible.value = true;
-    }, 500);
+    // conditionally render seedphrase collection
+    if (store.chosenKeyHolders.includes(props.participantLabel)) {
+      isFaded.value = true;
+      setTimeout(() => {
+        seedphraseVisible.value = true;
+      }, 500);
+    } else {
+      isFaded.value = true;
+      setTimeout(() => {
+        store.saveIntentions(dreams, conjurations, essence);
+      }, 800);
+    }
   }
 }
 const props = defineProps(["participantLabel"]);
@@ -60,7 +69,9 @@ const props = defineProps(["participantLabel"]);
     v-if="!seedphraseVisible"
   >
     <div class="heading__container">
-      <p class="participant-label">participant {{ props.participantLabel }}</p>
+      <p class="participant-label">
+        participant {{ props.participantLabel + 1 }}
+      </p>
       <p class="queryText">
         <Transition>
           <span v-if="!dreamFadeOut"
@@ -103,8 +114,9 @@ const props = defineProps(["participantLabel"]);
   </div>
   <SeedphraseDisplay
     v-if="seedphraseVisible"
-    :shard="props.participantLabel - 1"
+    :shardIndex="store.shardIndex"
     :intentions="[dreams, conjurations, essence]"
+    :keyHolderLabel="store.keyHolderLabel"
   />
 </template>
 

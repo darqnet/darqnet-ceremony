@@ -29,18 +29,20 @@ export const store = reactive({
 
   // participant and threshold
   participants: 0,
-  participantLabel: 1,
+  participantLabel: 0,
   keyHolders: 0,
   keyHolderLabel: 1,
   chosenKeyHolders: null,
+  shardIndex: 0, // incremented prop passed to SeedPhraseDisplay to give selected random participants their proper shards
   threshold: 0,
   acquiredPT: false,
+  encryptionError: false,
   fadeOutPT() {
     this.acquiredPT = true;
     console.log(
       "participants:",
       this.participants,
-      "key holders:",
+      "shardbearers:",
       this.keyHolders,
       "threshold:",
       this.threshold
@@ -66,7 +68,7 @@ export const store = reactive({
       this.threshold
     );
     this.shards = shards;
-    console.log("Shards:", this.shards);
+    // console.log("Shards:", this.shards);
     // console.log("DID:", this.did);
     this.determineKeyholders();
     this.fadeOutPT();
@@ -86,7 +88,7 @@ export const store = reactive({
     }
     chosenKeyHolders.sort((a, b) => a > b);
     this.chosenKeyHolders = chosenKeyHolders;
-    console.log("chosen key holders:", this.chosenKeyHolders);
+    // console.log("chosen key holders:", this.chosenKeyHolders);
   },
 
   // DID
@@ -105,11 +107,13 @@ export const store = reactive({
     this.intentions.dreams.push(d);
     this.intentions.conjurations.push(c);
     this.intentions.essence.push(e);
-    if (this.participantLabel < this.participants) {
+    if (this.participantLabel < this.participants - 1) {
       this.participantLabel++;
       this.rerender = !this.rerender; // trigger rerender of component
-    } else if (this.participantLabel === this.participants) {
+    } else if (this.participantLabel === this.participants - 1) {
       this.acquiredIntentions = true;
+      // console.log("acquired intentions.");
+      // console.log(this.intentions);
       encryptShards(API_URL);
     }
     // if (this.intentions.dreams.length === this.participants) {
@@ -119,6 +123,12 @@ export const store = reactive({
 
   // trigger rerender of GetIntentions
   rerender: false,
+
+  // displays encryption error message
+  showEncryptionErrorMessage() {
+    this.encryptionError = true;
+  },
+  encryptionErrorDetails: null,
 
   //*** Closing Ceremony ***
   acquiredThreshold: false,
@@ -184,35 +194,42 @@ export const store = reactive({
 });
 
 async function encryptShards(API_URL) {
-  const ceramic = new CeramicClient(API_URL);
-  ceramic.did = store.did;
-  const doc = await TileDocument.create(
-    ceramic,
-    null,
-    { deterministic: true },
-    { anchor: false, publish: false }
-  );
+  try {
+    const ceramic = new CeramicClient(API_URL);
+    ceramic.did = store.did;
+    const doc = await TileDocument.create(
+      ceramic,
+      null,
+      { deterministic: true },
+      { anchor: false, publish: false }
+    );
 
-  const cp = "what will you conjure by the summer solstice?";
-  const ep = "feel into the moment and capture its essence.";
-  const dp = "what is your biggest dream for the new year?";
-  const c = store.intentions.conjurations;
-  const e = store.intentions.essence;
-  const d = store.intentions.dreams;
+    const cp = "what will you conjure by the summer solstice?";
+    const ep = "feel into the moment and capture its essence.";
+    const dp = "what is your biggest dream for the new year?";
+    const c = store.intentions.conjurations;
+    const e = store.intentions.essence;
+    const d = store.intentions.dreams;
 
-  const jwe = await store.did.createDagJWE(
-    {
-      cp,
-      ep,
-      dp,
-      c,
-      e,
-      d,
-    },
-    [store.did.id]
-  );
-  console.log(JSON.stringify(jwe));
-  await doc.update(jwe);
+    const jwe = await store.did.createDagJWE(
+      {
+        cp,
+        ep,
+        dp,
+        c,
+        e,
+        d,
+      },
+      [store.did.id]
+    );
+    // console.log(JSON.stringify(jwe));
+    await doc.update(jwe);
+    console.log("Encryption Successful.");
+  } catch (err) {
+    console.error("Encryption Unsuccessful:", err);
+    store.encryptionErrorDetails = err;
+    store.showEncryptionErrorMessage();
+  }
 }
 
 async function decryptShards(API_URL) {

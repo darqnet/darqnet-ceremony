@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { store } from "../store";
-const props = defineProps(["shard", "intentions"]);
+const props = defineProps(["shardIndex", "intentions", "keyHolderLabel"]);
 let isFaded = ref(false);
 function saveAndFadeOut() {
   isFaded.value = true;
@@ -11,6 +11,8 @@ function saveAndFadeOut() {
       props.intentions[1],
       props.intentions[2]
     );
+    store.shardIndex++; // increment shard association tracker
+    store.keyHolderLabel++; // increment keyholder tracker
   }, 500);
 }
 </script>
@@ -20,9 +22,12 @@ function saveAndFadeOut() {
     <div class="teardrop-wrap">
       <div class="teardrop"></div>
     </div>
-    <p class="seedphrase__directive">make a note of your seed phrase.</p>
+    <p class="keyholder-label">
+      you are shardbearer {{ props.keyHolderLabel }}
+    </p>
+    <p class="seedphrase__directive">record your seed phrase.</p>
     <p class="seedphrase__content">
-      {{ store.shards[props.shard] }}
+      {{ store.shards[props.shardIndex] }}
     </p>
     <button class="submit" @click="saveAndFadeOut">&#5129;</button>
   </div>
@@ -33,8 +38,16 @@ function saveAndFadeOut() {
   opacity: 0;
 }
 
+.keyholder-label {
+  opacity: 0;
+  animation: fadeIn 0.4s 1.2s ease-in forwards;
+  font-size: 2.4rem;
+  color: var(--open-circle);
+  filter: drop-shadow(0 0 0.2em var(--open-circle));
+}
+
 .seedphrase__container {
-  max-width: 625px;
+  max-width: 1000px;
   text-align: center;
   transition: opacity 0.4s;
 }
@@ -48,16 +61,22 @@ function saveAndFadeOut() {
   font-size: 2rem;
   font-weight: 700;
   filter: drop-shadow(0 0 0.4em var(--flame-color));
-  animation: fadeIn 0.4s 1.2s ease-in forwards;
-  margin: 0;
+  animation: fadeIn 0.4s 1.6s ease-in forwards;
+  margin-top: 100px;
+  margin-bottom: 100px;
 }
 
 .seedphrase__content {
-  font-family: "IM Fell DW Pica", serif;
-  font-size: 1.5rem;
-  animation: fadeIn 0.4s 1.9s ease-in forwards;
-  margin: 4.7rem 0 2rem 0;
+  font-family: "Merriweather", serif;
+  font-size: 1.2rem;
+  line-height: 2.2rem;
+  animation: fadeIn 0.4s 2s ease-in forwards;
+  margin: 0rem 0 2rem 0;
   color: var(--open-circle);
+  border-radius: 100px;
+  border-right: solid 1px var(--flame-color);
+  border-left: solid 1px var(--flame-color);
+  padding: 0.5em 1.2em;
 }
 
 button {
@@ -90,7 +109,6 @@ button {
 
 .teardrop-wrap {
   margin: 0 auto;
-  margin-bottom: 6.5rem;
   min-height: 2rem;
   width: 2rem;
   filter: blur(0.025rem);
