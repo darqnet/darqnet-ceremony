@@ -1,7 +1,7 @@
 {
   "name": "darqnet-ceremony",
   "version": "1.0.0",
-  "description": "",
+  "description": "Darqnet :: Ceremony Web Application",
   "type": "module",
   "targets": {
     "myapp": {
@@ -20,7 +20,6 @@
     "vue": "vue/dist/vue.esm-browser.prod.js"
   },
   "keywords": [],
-  "author": "Conor Kelley",
   "license": "ISC",
   "devDependencies": {
     "@parcel/transformer-vue": "^2.12.0",
