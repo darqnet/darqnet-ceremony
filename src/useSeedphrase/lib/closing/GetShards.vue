@@ -62,7 +62,7 @@ function validateShard() {
     </div>
 
     <div class="input__area">
-      <textarea type="text" class="input"></textarea>
+      <textarea type="text" class="input" spellcheck="false"></textarea>
       <button class="submit" @click="validateShard">&#5129;</button>
     </div>
   </div>
