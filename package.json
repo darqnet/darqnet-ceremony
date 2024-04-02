@@ -38,6 +38,7 @@
     "@ceramicnetwork/stream-tile": "^1.5.8-rc.0",
     "@fontsource/im-fell-double-pica-sc": "^5.0.8",
     "@fontsource/im-fell-dw-pica": "^5.0.8",
+    "@fontsource/merriweather": "^5.0.12",
     "bip39": "^3.0.4",
     "dids": "^2.4.0",
     "key-did-provider-ed25519": "^1.1.0",
