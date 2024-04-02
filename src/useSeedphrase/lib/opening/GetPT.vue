@@ -2,15 +2,15 @@
 import { onMounted } from "vue";
 import { ref } from "vue";
 import { store } from "../store";
-import { getResolver } from "key-did-resolver";
-import * as Bip39 from "bip39";
-import { Ed25519Provider } from "key-did-provider-ed25519";
-import { DID } from "dids";
-import * as seedsplit from "../../js/seedsplit";
 let queryText;
 let input;
 let participantFadeOut = ref(false);
+let keyHolderFadeOut = ref(false);
 let thresholdFadeOut = ref(false);
+let gotParticipants = ref(false);
+let gotKeyHolders = ref(false);
+let gotThreshold = ref(false);
+
 onMounted(() => {
   queryText = document.querySelector(".queryText");
   input = document.querySelector("input");
@@ -19,11 +19,10 @@ onMounted(() => {
     input.focus();
   }, 2000);
 });
-let gotParticipants = ref(false);
-let gotThreshold = ref(false);
 
 function processPT() {
   if (!gotParticipants.value) {
+    // process participants
     if (!isNaN(parseInt(input.value))) {
       store.participants = parseInt(input.value);
       queryText.style.opacity = "0";
@@ -37,10 +36,29 @@ function processPT() {
       input.value = "";
       input.focus();
     }
-  } else if (gotParticipants.value && !gotThreshold.value) {
+  } else if (gotParticipants.value && !gotKeyHolders.value) {
+    // processes keyHolders
     if (
       !isNaN(parseInt(input.value)) &&
       parseInt(input.value) <= store.participants
+    ) {
+      store.keyHolders = parseInt(input.value);
+      queryText.style.opacity = "0";
+      setTimeout(() => {
+        gotKeyHolders.value = true;
+      }, 500);
+      setTimeout(() => {
+        keyHolderFadeOut.value = true;
+        queryText.style.opacity = "1";
+      }, 1000);
+      input.value = "";
+      input.focus();
+    }
+  } else if (gotKeyHolders.value && !gotThreshold.value) {
+    // process threshold
+    if (
+      !isNaN(parseInt(input.value)) &&
+      parseInt(input.value) <= store.keyHolders
     ) {
       store.threshold = parseInt(input.value);
       thresholdFadeOut.value = true;
@@ -48,27 +66,17 @@ function processPT() {
         gotThreshold.value = true;
       }, 500);
       input.value = "";
-      createShards(store.participants, store.threshold);
-      store.fadeOutPT();
+      store.createShards();
     }
   }
 }
 
-async function createShards(participants, threshold) {
-  const mnemonic = Bip39.generateMnemonic();
-  const seed = new Uint8Array(Bip39.mnemonicToSeedSync(mnemonic).slice(0, 32));
-  const provider = new Ed25519Provider(seed);
-  const did = new DID({ provider, resolver: getResolver() });
-  await did.authenticate();
-  store.did = did;
-  const shards = await seedsplit.split(mnemonic, participants, threshold);
-  store.saveShards(shards);
-}
-
-function validateThreshold() {
-  if (gotParticipants.value && parseInt(input.value) > store.participants)
+function validateKT() {
+  if (gotParticipants.value && parseInt(input.value) > store.participants) {
     input.style.borderColor = "red";
-  else {
+  } else if (gotKeyHolders.value && parseInt(input.value) > store.keyHolders) {
+    input.style.borderColor = "red";
+  } else {
     input.style.borderColor = "var(--flame-color)";
   }
 }
@@ -81,10 +89,13 @@ function validateThreshold() {
     </div>
     <p class="queryText">
       <span v-if="!gotParticipants">how many have gathered?</span>
-      <span v-if="participantFadeOut">what is your threshold?</span>
+      <span v-if="!gotKeyHolders && gotParticipants"
+        >how many keys shall be created?</span
+      >
+      <span v-if="keyHolderFadeOut">what shall be the threshold?</span>
     </p>
     <div class="input__container">
-      <input type="text" class="input" autofocus @keyup="validateThreshold" />
+      <input type="text" class="input" autofocus @keyup="validateKT" />
       <button class="submit" @click="processPT">&#5129;</button>
     </div>
   </div>

@@ -95,7 +95,7 @@ const props = defineProps(["participantLabel"]);
     </div>
 
     <div class="input__area">
-      <textarea type="text" class="input"></textarea>
+      <textarea type="text" class="input" spellcheck="false"></textarea>
       <button class="submit" v-bind="submitBTN" @click="pushIntentions">
         &#5129;
       </button>
