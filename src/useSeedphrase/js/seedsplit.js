@@ -1,5 +1,5 @@
 import * as Bip39 from "bip39";
-import * as ssss from "sss-wasm";
+import * as sss from "sss-wasm";
 import * as uint8arrays from "uint8arrays";
 
 const SECRET_LENGTH = 64;
@@ -23,7 +23,7 @@ export async function split(seed, numShards, threshold) {
   let prefix = lengthToPrefix[ent.length];
   ent = ent + getExtraEntopy(ent.length);
 
-  let shards = await ssss.createKeyshares(
+  let shards = await sss.createKeyshares(
     Buffer.from(ent, "hex"),
     numShards,
     threshold
@@ -56,7 +56,7 @@ export async function combine(shardMnemonics) {
     return buf;
   });
 
-  let combined = await ssss.combineKeyshares(shards);
+  let combined = await sss.combineKeyshares(shards);
   const hex = uint8arrays
     .toString(combined, "hex")
     .substring(0, prefixToLength[prefix]);
